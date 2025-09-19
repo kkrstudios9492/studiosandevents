@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KKR Store - KKR Studios</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <button id="menuBtn" class="btn" aria-label="Open menu"></button>
+            <div class="brand">KKR STUDIOS</div>
+        </div>
+        <nav>
+            <button id="cartBtnHeader" class="btn" title="Open cart" style="margin-right:8px;">🛒 <span id="cartCountHeader">0</span></button>
+            <a href="index.html" class="btn" style="margin-right:8px;">Home</a>
+            <button id="logoutBtn" class="btn" style="margin-left:8px;">Logout</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div style="max-width:1120px; width:100%; margin: 0 auto 12px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                <div style="text-align:left;">
+                    <h1 style="margin:0;">KKR Store</h1>
+                    <p class="subtitle" style="margin:4px 0 0;">Shop our premium event products and services</p>
+                </div>
+                <button id="cartBtnTop" class="btn primary" title="Open cart">
+                    🛒 Cart (<span id="cartCountTop">0</span>)
+                </button>
+            </div>
+        </div>
+        <div class="home-card" style="max-width:1120px; width:100%;">
+
+            <!-- Search and Filter Bar -->
+            <div class="ecommerce-controls">
+                <div class="filter-bar">
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="decorations">Decorations</option>
+                        <option value="photography">Photography</option>
+                        <option value="venue">Venue Services</option>
+                    </select>
+                    <select id="priceFilter" class="filter-select">
+                        <option value="0-500">Under ₹500</option>
+                        <option value="500-1000">₹500 - ₹1000</option>
+                        <option value="1000-5000">₹1000 - ₹5000</option>
+                        <option value="5000+">Above ₹5000</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Celebrations overview (non-selectable) -->
+            <section class="services-section" aria-labelledby="celebrationsHeading">
+                <div class="services-header">
+                    <h2 id="celebrationsHeading">Home Birthday & Anniversary Celebrations</h2>
+                    <div class="subtitle" style="margin:0;">Explore</div>
+                </div>
+                <div class="services-grid home">
+                    <div class="service-tile readonly">
+                        <span class="emoji">🎈</span>
+                        <span class="title">Room & Hall Decor</span>
+                        <span class="desc">Balloon arches, backdrops, fairy lights</span>
+                    </div>
+                    <div class="service-tile readonly">
+                        <span class="emoji">🕯️</span>
+                        <span class="title">Romantic Candlelight</span>
+                        <span class="desc">Roses, candles, photo corners</span>
+                    </div>
+                    <div class="service-tile readonly">
+                        <span class="emoji">🎂</span>
+                        <span class="title">Cake & Surprise Setup</span>
+                        <span class="desc">Entry surprise, cake table styling</span>
+                    </div>
+                    <div class="service-tile readonly">
+                        <span class="emoji">📷</span>
+                        <span class="title">Photo & Video</span>
+                        <span class="desc">Candid shoots, short reels</span>
+                    </div>
+                </div>
+            </section>
+
+            
+            
+            
+            <!-- Products Grid -->
+            <div id="productsGrid" class="products-grid">
+                <!-- Products will be dynamically loaded here -->
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination">
+                <button id="prevPage" class="btn" disabled>Previous</button>
+                <span id="pageInfo">Page 1 of 1</span>
+                <button id="nextPage" class="btn" disabled>Next</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Shopping Cart Drawer -->
+    <aside id="cartDrawer" class="cart-drawer">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button id="closeCart" class="btn">Close</button>
+        </div>
+        <div id="cartItems" class="cart-items"></div>
+        <div class="cart-footer">
+            <div class="cart-total-row">
+                <span>Total</span>
+                <strong id="cartTotal">₹0.00</strong>
+            </div>
+            <div class="cart-actions">
+                <button id="checkoutBtn" class="btn primary">Checkout</button>
+                <button id="emptyCartBtn" class="btn">Empty Cart</button>
+            </div>
+        </div>
+    </aside>
+
+    <aside id="sideMenu" class="side-menu" aria-hidden="true">
+        <div class="side-menu-header">
+            <strong>Menu</strong>
+            <button id="closeMenu" class="btn" aria-label="Close menu">Close</button>
+        </div>
+        <nav class="side-menu-list">
+            <a href="index.html" class="side-link">Home</a>
+            <a href="#" id="menuProfile" class="side-link">Your Profile</a>
+            <a href="#" id="menuCancel" class="side-link">Cancel Booking</a>
+            <a href="#" id="menuHelp" class="side-link">Help</a>
+            <a href="#" id="menuAbout" class="side-link">About</a>
+        </nav>
+    </aside>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div>
+                <div class="footer-label">Contact</div>
+                <div>+91 9019104086</div>
+            </div>
+            <div>
+                <div class="footer-label">Email</div>
+                <div>kirankumar68686@gmail.com</div>
+            </div>
+            <div>
+                <div class="footer-label">Address</div>
+                <div>KKR Studios,srinivaspura</div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="script.js"></script>
+    <script src="ecommerce.js"></script>
+</body>
+</html>

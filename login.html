@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <base href="./">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-card">
+            <h1>Welcome back</h1>
+            <p class="subtitle">Sign in to continue</p>
+
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" name="email" required placeholder="name@example.com">
+                    <small class="error" id="loginEmailError"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" name="password" required placeholder="Enter your password" minlength="6">
+                    <small class="error" id="loginPasswordError"></small>
+                </div>
+
+                <button type="submit" class="btn primary">Login</button>
+            </form>
+
+            <div style="margin:16px 0; text-align:center; color:var(--muted);">or continue with</div>
+            <div class="social-login" style="display:flex; gap:10px; justify-content:center;">
+                <button id="googleLogin" class="btn" aria-label="Continue with Google" title="Continue with Google">
+                    <span style="font-weight:700;">G</span>
+                    <span>Google</span>
+                </button>
+                <button id="facebookLogin" class="btn" aria-label="Continue with Facebook" title="Continue with Facebook">
+                    <span style="font-weight:700;">f</span>
+                    <span>Facebook</span>
+                </button>
+            </div>
+
+            <p class="alt-action">
+                Don't have an account?
+                <a href="register.html">Create one</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
