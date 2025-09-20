@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menuBtn" class="btn" aria-label="Open menu"></button>
+        <div class="brand">KKR STUDIOS</div>
+        <div></div> <!-- Empty div for spacing -->
+    </header>
+
+    <main class="container">
+        <div class="home-card" style="max-width:1120px; width:100%;">
+            <div class="slider" id="heroSlider">
+                <div class="slides">
+                    <img src="hero.jpg" alt="Elegant venue lighting">
+                    <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=2000&auto=format&fit=crop" alt="Birthday celebration setup">
+                    <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2000&auto=format&fit=crop" alt="Anniversary romantic decor">
+                    <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=2000&auto=format&fit=crop" alt="Cake and candles detail">
+                    
+                </div>
+                <button class="nav prev" aria-label="Previous">‹</button>
+                <button class="nav next" aria-label="Next">›</button>
+                <div class="dots"></div>
+            </div>
+            <div style="display:flex; justify-content:center; margin: 14px 0 20px;">
+                <a href="booking.html" class="btn primary">Book Now</a>
+            </div>
+            
+            <!-- New clickable container -->
+            <div class="feature-container">
+                <div class="feature-text">
+                    <h3>Home Birthday and Wedding Anniversary Decoration Services</h3>
+                    <p>Transform your special moments with our beautiful decorations</p>
+                </div>
+                <div class="feature-image-slider">
+                    <div class="slider-container">
+                        <div class="slider-track">
+                            <img src="hero.jpg" alt="Beautiful home decoration setup">
+                            <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=400&auto=format&fit=crop" alt="Birthday celebration setup">
+                            <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=400&auto=format&fit=crop" alt="Anniversary romantic decor">
+                            <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=400&auto=format&fit=crop" alt="Cake and candles detail">
+                            <img src="https://images.unsplash.com/photo-1514517002830-8e8b0fd8141a?q=80&w=400&auto=format&fit=crop" alt="Warm lights ambiance">
+                            <img src="https://images.unsplash.com/photo-1529627059279-9098883f05a0?q=80&w=400&auto=format&fit=crop" alt="Celebration moment">
+                            <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=400&auto=format&fit=crop" alt="Decor details">
+                            <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=400&auto=format&fit=crop" alt="Wedding decoration">
+                            <img src="https://images.unsplash.com/photo-1519167758481-83f142ee8e88?q=80&w=400&auto=format&fit=crop" alt="Party decorations">
+                            <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=400&auto=format&fit=crop" alt="Elegant table setup">
+                        </div>
+                        <button class="slider-nav prev" aria-label="Previous image">‹</button>
+                        <button class="slider-nav next" aria-label="Next image">›</button>
+                        <div class="slider-dots"></div>
+                    </div>
+                </div>
+                <div class="feature-actions">
+                    <button class="btn primary" onclick="redirectToEcommerce()">Book Now</button>
+                </div>
+            </div>
+            
+            <div id="productGrid" class="product-grid"></div>
+        </div>
+    </main>
+
+    <aside id="cartDrawer" class="cart-drawer">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button id="closeCart" class="btn">Close</button>
+        </div>
+        <div id="cartItems" class="cart-items"></div>
+        <div class="cart-footer">
+            <div class="cart-total-row">
+                <span>Total</span>
+                <strong id="cartTotal">$0.00</strong>
+            </div>
+            <div class="cart-actions">
+                <button id="checkoutBtn" class="btn primary">Checkout</button>
+                <button id="emptyCartBtn" class="btn">Empty Cart</button>
+            </div>
+        </div>
+    </aside>
+
+    <aside id="sideMenu" class="side-menu" aria-hidden="true">
+        <div class="side-menu-header">
+            <strong>Menu</strong>
+            <button id="closeMenu" class="btn" aria-label="Close menu">Close</button>
+        </div>
+        <nav class="side-menu-list">
+            <a href="#" id="menuProfile" class="side-link">Your Profile</a>
+            <a href="#" id="menuCancel" class="side-link">Cancel Booking</a>
+            <a href="#" id="menuHelp" class="side-link">Help</a>
+            <a href="#" id="menuAbout" class="side-link">About</a>
+            <button id="logoutBtn" class="side-link logout-btn">Logout</button>
+        </nav>
+    </aside>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div>
+                <div class="footer-label">Contact</div>
+                <div>+91 9019104086</div>
+            </div>
+            <div>
+                <div class="footer-label">Email</div>
+                <div>kirankumar68686@gmail.com</div>
+            </div>
+            <div>
+                <div class="footer-label">Address</div>
+                <div>KKR Studios,srinivaspura</div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

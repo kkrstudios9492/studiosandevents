@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Local Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .button {
+            background: #6c5ce7;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .button:hover { background: #5a4fcf; }
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        .success { background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .error { background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .warning { background: #fff3cd; color: #856404; padding: 15px; border-radius: 5px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Quick Fix for Google OAuth</h1>
+        
+        <div class="error">
+            <strong>❌ Problem:</strong> You're opening the HTML file directly in your browser (file:// protocol). 
+            Google OAuth doesn't work with file:// protocol due to security restrictions.
+        </div>
+        
+        <h2>🔧 Solution: Start a Local Server</h2>
+        
+        <div class="warning">
+            <strong>Choose one of these methods:</strong>
+        </div>
+        
+        <h3>Method 1: Using Python (Easiest)</h3>
+        <div class="code">1. Open Command Prompt
+2. Navigate to your project folder: cd "D:\kkr project"
+3. Run: python -m http.server 8000
+4. Open: http://localhost:8000/login.html</div>
+        
+        <h3>Method 2: Using Node.js</h3>
+        <div class="code">1. Open Command Prompt
+2. Navigate to your project folder: cd "D:\kkr project"
+3. Run: npx serve .
+4. Open the URL it shows (usually http://localhost:3000)</div>
+        
+        <h3>Method 3: Using the Batch File</h3>
+        <div class="code">1. Double-click "start-local-server.bat" in your project folder
+2. Open: http://localhost:8000/login.html</div>
+        
+        <h2>🎯 Quick Test</h2>
+        <p>After starting the server, test these links:</p>
+        <a href="http://localhost:8000/login.html" class="button" target="_blank">Test Login Page</a>
+        <a href="http://localhost:8000/debug-oauth.html" class="button" target="_blank">Run Debug Tool</a>
+        
+        <h2>✅ What Should Happen</h2>
+        <div class="success">
+            <strong>After starting the server:</strong><br>
+            • No more CORS errors<br>
+            • Google OAuth SDK loads properly<br>
+            • Google login button works<br>
+            • You can sign in with Google
+        </div>
+        
+        <h2>🔍 Still Not Working?</h2>
+        <p>If you still have issues after starting the server:</p>
+        <ol>
+            <li>Make sure you're using <code>http://localhost:8000</code> (not file://)</li>
+            <li>Check that your Google Cloud Console has <code>http://localhost:8000</code> in authorized origins</li>
+            <li>Try a different browser or incognito mode</li>
+            <li>Disable any ad blockers temporarily</li>
+        </ol>
+        
+        <h2>📝 Google Cloud Console Setup</h2>
+        <p>If you haven't set up Google Cloud Console yet:</p>
+        <div class="code">1. Go to: https://console.cloud.google.com/apis/credentials
+2. Click on your OAuth 2.0 Client ID
+3. Add to "Authorized JavaScript origins":
+   - http://localhost:8000
+   - http://localhost:3000
+4. Add to "Authorized redirect URIs":
+   - http://localhost:8000/login.html
+   - http://localhost:3000/login.html
+5. Save changes</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Setup Guide - KKR Studios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #6c5ce7;
+            border-radius: 5px;
+        }
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        .success { background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .warning { background: #fff3cd; color: #856404; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .file-structure {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ Image Setup Guide for KKR Studios Ecommerce</h1>
+        <p>This guide will help you easily replace product images in your ecommerce page.</p>
+        
+        <div class="step">
+            <h3>Step 1: Understand the Current Setup</h3>
+            <p>I've updated your ecommerce.js file to use local image paths instead of external URLs:</p>
+            <div class="code">// Before (external URLs):
+image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=400&auto=format&fit=crop'
+
+// After (local paths):
+image: 'images/products/premium-decorations.jpg'</div>
+        </div>
+        
+        <div class="step">
+            <h3>Step 2: File Structure</h3>
+            <p>Your project now has this structure:</p>
+            <div class="file-structure">D:\kkr project\
+├── ecommerce.html
+├── ecommerce.js
+├── images\
+│   └── products\
+│       ├── README.md
+│       ├── image-config.js
+│       ├── premium-decorations.jpg (add your image here)
+│       ├── photography-package.jpg (add your image here)
+│       ├── venue-rental.jpg (add your image here)
+│       ├── birthday-party.jpg (add your image here)
+│       ├── wedding-photography.jpg (add your image here)
+│       └── corporate-event.jpg (add your image here)</div>
+        </div>
+        
+        <div class="step">
+            <h3>Step 3: Add Your Images</h3>
+            <p>To replace the product images:</p>
+            <ol>
+                <li><strong>Open the folder:</strong> <code>D:\kkr project\images\products\</code></li>
+                <li><strong>Add your image files</strong> with these exact names:
+                    <ul>
+                        <li>premium-decorations.jpg</li>
+                        <li>photography-package.jpg</li>
+                        <li>venue-rental.jpg</li>
+                        <li>birthday-party.jpg</li>
+                        <li>wedding-photography.jpg</li>
+                        <li>corporate-event.jpg</li>
+                    </ul>
+                </li>
+                <li><strong>Keep the same filenames</strong> - the code references these specific names</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h3>Step 4: Image Requirements</h3>
+            <div class="warning">
+                <strong>Recommended specifications:</strong>
+                <ul>
+                    <li><strong>Format:</strong> JPG or PNG</li>
+                    <li><strong>Size:</strong> 400x300 pixels (or similar aspect ratio)</li>
+                    <li><strong>File Size:</strong> Under 500KB per image</li>
+                    <li><strong>Quality:</strong> High quality, clear images</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="step">
+            <h3>Step 5: Test Your Images</h3>
+            <p>After adding your images:</p>
+            <ol>
+                <li>Open <code>ecommerce.html</code> in your browser</li>
+                <li>Check that all product images load correctly</li>
+                <li>If an image doesn't load, check the filename matches exactly</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h3>Step 6: Using Different Filenames (Advanced)</h3>
+            <p>If you want to use different filenames:</p>
+            <ol>
+                <li>Open <code>ecommerce.js</code></li>
+                <li>Find the <code>products</code> array (around line 5)</li>
+                <li>Update the <code>image</code> property for each product</li>
+                <li>Example: <code>image: 'images/products/your-custom-name.jpg'</code></li>
+            </ol>
+        </div>
+        
+        <div class="success">
+            <h3>✅ Benefits of This Setup</h3>
+            <ul>
+                <li><strong>Easy to replace:</strong> Just drop new images in the folder</li>
+                <li><strong>No external dependencies:</strong> Images load from your own server</li>
+                <li><strong>Faster loading:</strong> Local images load much faster</li>
+                <li><strong>Better control:</strong> You own and control all images</li>
+                <li><strong>Offline capable:</strong> Works without internet connection</li>
+            </ul>
+        </div>
+        
+        <div class="warning">
+            <h3>⚠️ Important Notes</h3>
+            <ul>
+                <li>Make sure all image files are in the correct folder</li>
+                <li>Filenames must match exactly (case-sensitive)</li>
+                <li>If an image is missing, you'll see a broken image icon</li>
+                <li>Test your ecommerce page after adding images</li>
+            </ul>
+        </div>
+        
+        <h3>🎯 Quick Start</h3>
+        <p>Ready to add your images? Just follow these steps:</p>
+        <div class="code">1. Go to: D:\kkr project\images\products\
+2. Add your 6 product images with the exact filenames listed above
+3. Open ecommerce.html to test
+4. Done! Your images are now live on the ecommerce page</div>
+    </div>
+</body>
+</html>

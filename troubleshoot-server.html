@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Troubleshooting Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #6c5ce7;
+            border-radius: 5px;
+        }
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        .success { background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .error { background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .warning { background: #fff3cd; color: #856404; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .button {
+            background: #6c5ce7;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .button:hover { background: #5a4fcf; }
+        .test-link {
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+            font-size: 16px;
+        }
+        .test-link:hover { background: #218838; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Server Troubleshooting Guide</h1>
+        <p>If <code>http://localhost:8000</code> is not loading, follow these steps:</p>
+        
+        <div class="step">
+            <h3>Step 1: Check if Python is Installed</h3>
+            <p>Open Command Prompt and run:</p>
+            <div class="code">python --version</div>
+            <p><strong>If you see an error:</strong> Python is not installed</p>
+            <div class="warning">
+                <strong>Solution:</strong> Download Python from <a href="https://python.org" target="_blank">python.org</a><br>
+                Make sure to check "Add Python to PATH" during installation
+            </div>
+        </div>
+        
+        <div class="step">
+            <h3>Step 2: Check if Server is Running</h3>
+            <p>In Command Prompt, make sure you see:</p>
+            <div class="code">Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...</div>
+            <p><strong>If you don't see this:</strong> The server isn't running</p>
+            <div class="warning">
+                <strong>Solution:</strong> Make sure you're in the right folder and run the command again
+            </div>
+        </div>
+        
+        <div class="step">
+            <h3>Step 3: Check Your Folder Location</h3>
+            <p>Make sure you're in the correct folder. In Command Prompt, run:</p>
+            <div class="code">cd "D:\kkr project"
+dir</div>
+            <p>You should see files like: <code>login.html</code>, <code>script.js</code>, etc.</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 4: Try Different Ports</h3>
+            <p>If port 8000 is busy, try a different port:</p>
+            <div class="code">python -m http.server 8080</div>
+            <p>Then open: <code>http://localhost:8080</code></p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 5: Alternative Methods</h3>
+            
+            <h4>Method A: Using Node.js (if you have it)</h4>
+            <div class="code">npx serve . -p 8000</div>
+            
+            <h4>Method B: Using PHP (if you have it)</h4>
+            <div class="code">php -S localhost:8000</div>
+            
+            <h4>Method C: Using Live Server (VS Code extension)</h4>
+            <p>If you have VS Code, install "Live Server" extension and right-click on login.html → "Open with Live Server"</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 6: Check Firewall/Antivirus</h3>
+            <p>Sometimes firewall or antivirus blocks local servers:</p>
+            <ul>
+                <li>Check Windows Firewall settings</li>
+                <li>Add Python to antivirus exceptions</li>
+                <li>Try disabling antivirus temporarily</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h3>Step 7: Test Different URLs</h3>
+            <p>Try these URLs in your browser:</p>
+            <a href="http://127.0.0.1:8000" class="test-link" target="_blank">http://127.0.0.1:8000</a>
+            <a href="http://localhost:8000" class="test-link" target="_blank">http://localhost:8000</a>
+            <a href="http://localhost:8080" class="test-link" target="_blank">http://localhost:8080</a>
+        </div>
+        
+        <div class="step">
+            <h3>Step 8: Quick Test Without OAuth</h3>
+            <p>If you just want to test the login page without OAuth, you can:</p>
+            <div class="code">1. Open login.html directly in browser
+2. Use email/password login (it will work)
+3. Google/Facebook buttons will show helpful messages</div>
+        </div>
+        
+        <div class="success">
+            <h3>✅ Still Having Issues?</h3>
+            <p>Try this simple test:</p>
+            <div class="code">1. Open Command Prompt
+2. Type: echo "Hello World" > test.txt
+3. Type: python -m http.server 8000
+4. Open: http://localhost:8000/test.txt
+5. You should see "Hello World"</div>
+            <p>If this works, the server is running correctly!</p>
+        </div>
+        
+        <div class="warning">
+            <h3>⚠️ Common Issues:</h3>
+            <ul>
+                <li><strong>Port already in use:</strong> Try port 8080 or 3000</li>
+                <li><strong>Python not found:</strong> Install Python and add to PATH</li>
+                <li><strong>Wrong folder:</strong> Make sure you're in "D:\kkr project"</li>
+                <li><strong>Firewall blocking:</strong> Check Windows Firewall settings</li>
+                <li><strong>Browser cache:</strong> Try incognito mode or clear cache</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
