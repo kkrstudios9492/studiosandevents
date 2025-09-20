@@ -8,27 +8,16 @@
 </head>
 <body>
     <header class="site-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <button id="menuBtn" class="btn" aria-label="Open menu"></button>
-            <div class="brand">KKR STUDIOS</div>
-        </div>
-        <nav>
-            <button id="cartBtnHeader" class="btn" title="Open cart" style="margin-right:8px;">🛒 <span id="cartCountHeader">0</span></button>
-            <a href="index.html" class="btn" style="margin-right:8px;">Home</a>
-            <button id="logoutBtn" class="btn" style="margin-left:8px;">Logout</button>
-        </nav>
+        <div></div> <!-- Empty div for spacing -->
+        <div class="brand">KKR STUDIOS</div>
+        <div></div> <!-- Empty div for spacing -->
     </header>
 
     <main class="container">
         <div style="max-width:1120px; width:100%; margin: 0 auto 12px;">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
-                <div style="text-align:left;">
-                    <h1 style="margin:0;">KKR Store</h1>
-                    <p class="subtitle" style="margin:4px 0 0;">Shop our premium event products and services</p>
-                </div>
-                <button id="cartBtnTop" class="btn primary" title="Open cart">
-                    🛒 Cart (<span id="cartCountTop">0</span>)
-                </button>
+            <div style="text-align:left;">
+                <h1 style="margin:0;">KKR Store</h1>
+                <p class="subtitle" style="margin:4px 0 0;">Shop our premium event products and services</p>
             </div>
         </div>
         <div class="home-card" style="max-width:1120px; width:100%;">
@@ -127,6 +116,7 @@
             <a href="#" id="menuCancel" class="side-link">Cancel Booking</a>
             <a href="#" id="menuHelp" class="side-link">Help</a>
             <a href="#" id="menuAbout" class="side-link">About</a>
+            <button id="logoutBtn" class="side-link logout-btn">Logout</button>
         </nav>
     </aside>
 

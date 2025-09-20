@@ -110,21 +110,231 @@ function showError(id, message) {
     if (el) el.textContent = message || '';
 }
 
+// OAuth Configuration
+// You can either set these directly here or load from a config file
+const GOOGLE_CLIENT_ID = '663869281104-m0ibft389831co335cdms3j7sohubgeg.apps.googleusercontent.com';
+const FACEBOOK_APP_ID = 'YOUR_FACEBOOK_APP_ID'; // Replace with your actual Facebook App ID
+
+// Alternative: Load from config file if available
+// Uncomment the following lines if you want to use a separate config file
+/*
+try {
+    const config = require('./config.js');
+    GOOGLE_CLIENT_ID = config.GOOGLE_CLIENT_ID;
+    FACEBOOK_APP_ID = config.FACEBOOK_APP_ID;
+} catch (e) {
+    console.log('Using default OAuth configuration. Create config.js for custom settings.');
+}
+*/
+
+// Initialize Google OAuth
+function initializeGoogleAuth() {
+    // Check if we have a valid client ID
+    if (GOOGLE_CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
+        console.warn('Google OAuth not configured. Please set your GOOGLE_CLIENT_ID in script.js');
+        return;
+    }
+    
+    // Check if we're running on file:// protocol
+    if (window.location.protocol === 'file:') {
+        console.warn('Google OAuth requires HTTPS or localhost. Please use a local server.');
+        console.warn('Run: python -m http.server 8000 and open http://localhost:8000/login.html');
+        return;
+    }
+    
+    if (typeof google !== 'undefined' && google.accounts) {
+        google.accounts.id.initialize({
+            client_id: GOOGLE_CLIENT_ID,
+            callback: handleGoogleResponse
+        });
+        console.log('Google OAuth initialized successfully');
+    } else {
+        console.warn('Google OAuth SDK not loaded. This usually means you need to use a local server.');
+        console.warn('Try: python -m http.server 8000 and open http://localhost:8000/login.html');
+    }
+}
+
+// Initialize Facebook SDK
+function initializeFacebookAuth() {
+    // Check if we have a valid app ID
+    if (FACEBOOK_APP_ID === 'YOUR_FACEBOOK_APP_ID') {
+        console.warn('Facebook OAuth not configured. Please set your FACEBOOK_APP_ID in script.js');
+        return;
+    }
+    
+    if (typeof FB !== 'undefined') {
+        FB.init({
+            appId: FACEBOOK_APP_ID,
+            cookie: true,
+            xfbml: true,
+            version: 'v18.0'
+        });
+    } else {
+        console.warn('Facebook SDK not loaded');
+    }
+}
+
+// Handle Google Login
+function handleGoogleLogin() {
+    if (GOOGLE_CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
+        alert('Google OAuth is not configured yet. Please follow the setup instructions in OAUTH_SETUP.md');
+        return;
+    }
+    
+    if (typeof google !== 'undefined' && google.accounts) {
+        google.accounts.id.prompt();
+    } else {
+        alert('Google Sign-In is not available. Please check your internet connection.');
+    }
+}
+
+// Handle Google OAuth Response
+function handleGoogleResponse(response) {
+    try {
+        const responsePayload = decodeJwtResponse(response.credential);
+        
+        if (responsePayload && responsePayload.email) {
+            // Create or find user account
+            const users = readUsers();
+            let user = users.find(u => u.email.toLowerCase() === responsePayload.email.toLowerCase());
+            
+            if (!user) {
+                // Create new user account
+                user = {
+                    fullName: responsePayload.name || 'Google User',
+                    email: responsePayload.email,
+                    password: '', // No password for social login
+                    provider: 'google',
+                    providerId: responsePayload.sub
+                };
+                users.push(user);
+                writeUsers(users);
+            }
+            
+            // Set session and redirect
+            setSession(user.email);
+            logSocialLogin(user.email, 'google');
+            
+            // Redirect based on user type
+            const isAdmin = (user.email === 'varunraj173205@gmail.com');
+            window.location.href = isAdmin ? 'admin.html' : 'index.html';
+        } else {
+            alert('Failed to get user information from Google. Please try again.');
+        }
+    } catch (error) {
+        console.error('Google login error:', error);
+        alert('Google login failed. Please try again.');
+    }
+}
+
+// Handle Facebook Login
+function handleFacebookLogin() {
+    if (FACEBOOK_APP_ID === 'YOUR_FACEBOOK_APP_ID') {
+        alert('Facebook OAuth is not configured yet. Please follow the setup instructions in OAUTH_SETUP.md');
+        return;
+    }
+    
+    if (typeof FB !== 'undefined') {
+        FB.login(function(response) {
+            if (response.authResponse) {
+                handleFacebookResponse(response);
+            } else {
+                alert('Facebook login was cancelled or failed.');
+            }
+        }, {scope: 'email'});
+    } else {
+        alert('Facebook Login is not available. Please check your internet connection.');
+    }
+}
+
+// Handle Facebook Login Response
+function handleFacebookResponse(response) {
+    FB.api('/me', {fields: 'name,email'}, function(userInfo) {
+        try {
+            if (userInfo && userInfo.email) {
+                // Create or find user account
+                const users = readUsers();
+                let user = users.find(u => u.email.toLowerCase() === userInfo.email.toLowerCase());
+                
+                if (!user) {
+                    // Create new user account
+                    user = {
+                        fullName: userInfo.name || 'Facebook User',
+                        email: userInfo.email,
+                        password: '', // No password for social login
+                        provider: 'facebook',
+                        providerId: userInfo.id
+                    };
+                    users.push(user);
+                    writeUsers(users);
+                }
+                
+                // Set session and redirect
+                setSession(user.email);
+                logSocialLogin(user.email, 'facebook');
+                
+                // Redirect based on user type
+                const isAdmin = (user.email === 'varunraj173205@gmail.com');
+                window.location.href = isAdmin ? 'admin.html' : 'index.html';
+            } else {
+                alert('Failed to get user information from Facebook. Please try again.');
+            }
+        } catch (error) {
+            console.error('Facebook login error:', error);
+            alert('Facebook login failed. Please try again.');
+        }
+    });
+}
+
+// Decode JWT token (for Google OAuth)
+function decodeJwtResponse(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    } catch (error) {
+        console.error('Error decoding JWT:', error);
+        return null;
+    }
+}
+
+// Log social login for analytics
+function logSocialLogin(email, provider) {
+    try {
+        const rec = { email, provider, at: new Date().toISOString() };
+        const list = JSON.parse(localStorage.getItem(STORAGE_KEYS.logins) || '[]');
+        list.push(rec);
+        localStorage.setItem(STORAGE_KEYS.logins, JSON.stringify(list));
+    } catch (error) {
+        console.error('Error logging social login:', error);
+    }
+}
+
 function onLoginLoaded() {
     const form = document.getElementById('loginForm');
     if (!form) return;
 
-    // Social login (placeholder)
+    // Initialize Google OAuth
+    initializeGoogleAuth();
+    
+    // Initialize Facebook SDK (disabled until credentials are configured)
+    // initializeFacebookAuth();
+
+    // Social login handlers
     const googleBtn = document.getElementById('googleLogin');
     const facebookBtn = document.getElementById('facebookLogin');
+    
     if (googleBtn) {
         googleBtn.addEventListener('click', function () {
-            alert('Google Sign-In is not yet configured. Set up OAuth client and backend to enable.');
+            handleGoogleLogin();
         });
     }
     if (facebookBtn) {
         facebookBtn.addEventListener('click', function () {
-            alert('Facebook Login is not yet configured. Set up Facebook App and backend to enable.');
+            handleFacebookLogin();
         });
     }
 
@@ -176,6 +386,25 @@ function onLoginLoaded() {
 function onRegisterLoaded() {
     const form = document.getElementById('registerForm');
     if (!form) return;
+
+    // Initialize social auth for register page
+    initializeGoogleAuth();
+    // initializeFacebookAuth();
+
+    // Social login handlers for register page
+    const googleBtn = document.getElementById('googleRegister');
+    const facebookBtn = document.getElementById('facebookRegister');
+    
+    if (googleBtn) {
+        googleBtn.addEventListener('click', function () {
+            handleGoogleLogin();
+        });
+    }
+    if (facebookBtn) {
+        facebookBtn.addEventListener('click', function () {
+            handleFacebookLogin();
+        });
+    }
 
     form.addEventListener('submit', function (event) {
         event.preventDefault();
@@ -381,7 +610,7 @@ function onHomeLoaded() {
                 <div class="title">${p.title}</div>
                 <div class="price">$${p.price.toFixed(2)}</div>
                 <div class="actions">
-                    <button data-id="${p.id}" class="btn primary add-to-cart">Add to cart</button>
+                    <button data-id="${p.id}" class="btn primary add-to-cart">Book now</button>
                 </div>
             </div>
         `;

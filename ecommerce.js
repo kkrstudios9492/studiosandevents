@@ -9,7 +9,7 @@ const products = [
         description: 'Beautiful decorations for birthdays, weddings, and special occasions',
         price: 2500,
         category: 'decorations',
-        image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=400&auto=format&fit=crop',
+        image: 'images/products/premium-decorations.jpg',
         stock: 10
     },
     {
@@ -18,7 +18,7 @@ const products = [
         description: 'Complete photography service with editing and digital delivery',
         price: 5000,
         category: 'photography',
-        image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=400&auto=format&fit=crop',
+        image: 'images/products/photography-package.jpg',
         stock: 5
     },
     {
@@ -27,7 +27,7 @@ const products = [
         description: 'Complete venue setup with lighting and seating',
         price: 8000,
         category: 'venue',
-        image: 'https://images.unsplash.com/photo-1514517002830-8e8b0fd8141a?q=80&w=400&auto=format&fit=crop',
+        image: 'images/products/venue-rental.jpg',
         stock: 2
     },
     {
@@ -36,7 +36,7 @@ const products = [
         description: 'Complete birthday celebration setup',
         price: 1500,
         category: 'decorations',
-        image: 'https://images.unsplash.com/photo-1529627059279-9098883f05a0?q=80&w=400&auto=format&fit=crop',
+        image: 'images/products/birthday-party.jpg',
         stock: 15
     },
     {
@@ -45,7 +45,7 @@ const products = [
         description: 'Professional wedding photography with album',
         price: 12000,
         category: 'photography',
-        image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=400&auto=format&fit=crop',
+        image: 'images/products/wedding-photography.jpg',
         stock: 4
     },
     {
@@ -54,7 +54,7 @@ const products = [
         description: 'Professional setup for business events',
         price: 6000,
         category: 'venue',
-        image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=400&auto=format&fit=crop',
+        image: 'images/products/corporate-event.jpg',
         stock: 6
     }
 ];
@@ -177,7 +177,7 @@ function renderProducts() {
                 <div class="product-description">${product.description}</div>
                 <div class="product-price">₹${product.price.toFixed(2)}</div>
                 <div class="product-actions">
-                    <button class="btn add-to-cart" data-id="${product.id}">Add to Cart</button>
+                    <button class="btn add-to-cart" data-id="${product.id}">Book now</button>
                 </div>
             </div>
         `;
