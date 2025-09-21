@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register - KKR Studios</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Clerk SDK -->
+    <script>
+        window.Clerk = {
+            publishableKey: 'pk_test_YOUR_PUBLISHABLE_KEY_HERE' // Replace with your actual Clerk publishable key
+        };
+    </script>
+    <script async crossorigin="anonymous" 
+            data-clerk-publishable-key="pk_test_YOUR_PUBLISHABLE_KEY_HERE" 
+            src="https://YOUR_FRONTEND_API.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-card">
+            <h1>Create account</h1>
+            <p class="subtitle">Join us in a minute</p>
+
+            <!-- Clerk Sign Up Component -->
+            <div id="clerk-sign-up"></div>
+
+            <!-- Fallback for email/password registration -->
+            <div id="fallback-auth" style="display: none;">
+                <form id="registerForm" novalidate>
+                    <div class="form-group">
+                        <label for="regUsername">Full Name</label>
+                        <input type="text" id="regUsername" name="fullName" required placeholder="Your full name" minlength="3" maxlength="40">
+                        <small class="error" id="regUsernameError"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regEmail">Email</label>
+                        <input type="email" id="regEmail" name="email" required placeholder="name@example.com">
+                        <small class="error" id="regEmailError"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regPassword">Password</label>
+                        <input type="password" id="regPassword" name="password" required placeholder="Create a password" minlength="6">
+                        <small class="error" id="regPasswordError"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regConfirmPassword">Confirm Password</label>
+                        <input type="password" id="regConfirmPassword" name="confirmPassword" required placeholder="Re-enter your password" minlength="6">
+                        <small class="error" id="regConfirmPasswordError"></small>
+                    </div>
+
+                    <button type="submit" class="btn primary">Register</button>
+                </form>
+            </div>
+
+            <p class="alt-action">
+                Already have an account?
+                <a href="login.html">Sign in</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Clerk Authentication
+        window.addEventListener('load', async () => {
+            try {
+                // Load Clerk
+                await window.Clerk.load();
+                
+                // Check if user is already signed in
+                if (window.Clerk.user) {
+                    console.log('User already signed in:', window.Clerk.user);
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                // Mount Clerk Sign Up component
+                window.Clerk.mountSignUp(document.getElementById('clerk-sign-up'), {
+                    appearance: {
+                        elements: {
+                            formButtonPrimary: 'btn primary',
+                            card: 'auth-card',
+                            headerTitle: 'h1',
+                            headerSubtitle: 'subtitle',
+                            socialButtonsBlockButton: 'btn',
+                            socialButtonsBlockButtonText: 'span'
+                        },
+                        variables: {
+                            colorPrimary: '#667eea',
+                            colorBackground: '#ffffff',
+                            colorText: '#1f2937'
+                        }
+                    },
+                    signInUrl: '/login.html',
+                    afterSignUpUrl: '/index.html',
+                    redirectUrl: '/index.html'
+                });
+
+                console.log('Clerk Sign Up component mounted successfully');
+
+            } catch (error) {
+                console.error('Clerk initialization failed:', error);
+                console.log('Showing fallback registration form');
+                
+                // Show fallback form if Clerk fails
+                document.getElementById('fallback-auth').style.display = 'block';
+                
+                // Hide Clerk component
+                const clerkComponent = document.getElementById('clerk-sign-up');
+                if (clerkComponent) {
+                    clerkComponent.style.display = 'none';
+                }
+            }
+        });
+
+        // Fallback form submission handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerForm = document.getElementById('registerForm');
+            if (registerForm) {
+                registerForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const fullName = document.getElementById('regUsername').value;
+                    const email = document.getElementById('regEmail').value;
+                    const password = document.getElementById('regPassword').value;
+                    const confirmPassword = document.getElementById('regConfirmPassword').value;
+                    
+                    // Basic validation
+                    if (!fullName || !email || !password || !confirmPassword) {
+                        alert('Please fill in all fields');
+                        return;
+                    }
+                    
+                    if (password !== confirmPassword) {
+                        alert('Passwords do not match');
+                        return;
+                    }
+                    
+                    if (password.length < 6) {
+                        alert('Password must be at least 6 characters long');
+                        return;
+                    }
+                    
+                    // For now, just redirect to index.html
+                    // In production, you would create the account here
+                    console.log('Fallback registration attempt:', { fullName, email, password });
+                    alert('Fallback registration - redirecting to main page');
+                    window.location.href = 'index.html';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
+

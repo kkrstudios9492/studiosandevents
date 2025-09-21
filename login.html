@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login - KKR Studios</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <base href="./">
+    
+    <!-- Clerk SDK -->
+    <script>
+        window.Clerk = {
+            publishableKey: 'pk_test_YOUR_PUBLISHABLE_KEY_HERE' // Replace with your actual Clerk publishable key
+        };
+    </script>
+    <script async crossorigin="anonymous" 
+            data-clerk-publishable-key="pk_test_YOUR_PUBLISHABLE_KEY_HERE" 
+            src="https://YOUR_FRONTEND_API.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-card">
+            <h1>Welcome back</h1>
+            <p class="subtitle">Sign in to continue</p>
+
+            <!-- Clerk Sign In Component -->
+            <div id="clerk-sign-in"></div>
+
+            <!-- Fallback for email/password -->
+            <div id="fallback-auth" style="display: none;">
+                <form id="loginForm" novalidate>
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" name="email" required placeholder="name@example.com">
+                        <small class="error" id="loginEmailError"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" name="password" required placeholder="Enter your password" minlength="6">
+                        <small class="error" id="loginPasswordError"></small>
+                    </div>
+
+                    <button type="submit" class="btn primary">Login</button>
+                </form>
+            </div>
+
+            <p class="alt-action">
+                Don't have an account?
+                <a href="register.html">Create one</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Clerk Authentication
+        window.addEventListener('load', async () => {
+            try {
+                // Load Clerk
+                await window.Clerk.load();
+                
+                // Check if user is already signed in
+                if (window.Clerk.user) {
+                    console.log('User already signed in:', window.Clerk.user);
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                // Mount Clerk Sign In component
+                window.Clerk.mountSignIn(document.getElementById('clerk-sign-in'), {
+                    appearance: {
+                        elements: {
+                            formButtonPrimary: 'btn primary',
+                            card: 'auth-card',
+                            headerTitle: 'h1',
+                            headerSubtitle: 'subtitle',
+                            socialButtonsBlockButton: 'btn',
+                            socialButtonsBlockButtonText: 'span'
+                        },
+                        variables: {
+                            colorPrimary: '#667eea',
+                            colorBackground: '#ffffff',
+                            colorText: '#1f2937'
+                        }
+                    },
+                    signUpUrl: '/register.html',
+                    afterSignInUrl: '/index.html',
+                    redirectUrl: '/index.html'
+                });
+
+                console.log('Clerk Sign In component mounted successfully');
+
+            } catch (error) {
+                console.error('Clerk initialization failed:', error);
+                console.log('Showing fallback authentication form');
+                
+                // Show fallback form if Clerk fails
+                document.getElementById('fallback-auth').style.display = 'block';
+                
+                // Hide Clerk component
+                const clerkComponent = document.getElementById('clerk-sign-in');
+                if (clerkComponent) {
+                    clerkComponent.style.display = 'none';
+                }
+            }
+        });
+
+        // Fallback form submission handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const email = document.getElementById('loginEmail').value;
+                    const password = document.getElementById('loginPassword').value;
+                    
+                    if (email && password) {
+                        // For now, just redirect to index.html
+                        // In production, you would validate credentials here
+                        console.log('Fallback login attempt:', { email, password });
+                        alert('Fallback login - redirecting to main page');
+                        window.location.href = 'index.html';
+                    } else {
+                        alert('Please fill in all fields');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
