@@ -308,7 +308,8 @@ function initiatePayment(orderData) {
         }
         
         const options = {
-            key: RAZORPAY_KEY,
+            key: 0xzDLuJpumd1IytqRBVo76fU
+,
             amount: amountPaise,
             currency: 'INR',
             name: 'KKR Studios',
