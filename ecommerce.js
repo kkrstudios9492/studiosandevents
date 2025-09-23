@@ -589,7 +589,7 @@ function initiateEcommercePayment(customerDetails, cart, total) {
             return;
         }
         
-        const RAZORPAY_KEY = 'rzp_test_RFU56fR6NeZ9T2';
+        const RAZORPAY_KEY = 'rzp_live_RL0aQPFf6qqIj2';
         
         if (!RAZORPAY_KEY || !amountPaise) {
             console.error('Missing Razorpay key or amount');
