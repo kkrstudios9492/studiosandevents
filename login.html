@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login - Mango Mart</title>
+  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <script>
+    // Reuse the same runtime config as index.html
+    window.RAZORPAY_KEY = 'rzp_test_RFU56fR6NeZ9T2';
+    window.GMAPS_KEY = 'AIzaSyCb1le2CESuZX7vWSz5UeNQA4N-Ub9KysI';
+    window.SUPABASE_URL = 'https://hlkwnncqnlduczkmjnth.supabase.co';
+    window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhsa3dubmNxbmxkdWN6a21qbnRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTI2NzYsImV4cCI6MjA3NTkyODY3Nn0.dC9fMKnSR9DmM0eFGt3dXffVc8IVsxAz2xAl9n69yZs';
+  </script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script defer src="supabaseClient.js"></script>
+  <script defer src="storage.js"></script>
+  <script defer src="dataservice.js"></script>
+  <script defer src="auth.js"></script>
+</head>
+<body>
+  <div id="loading" class="loading-container" style="display:none"><div class="loading-spinner"></div></div>
+
+  <div class="page">
+    <div class="login-container">
+      <div class="login-card">
+        <div class="card-header"><h2>Mango Mart</h2><p id="auth-title">Sign in to continue</p></div>
+        <form id="login-form" class="card-content">
+          <div class="form-group"><label>Email</label><input id="email" type="email" required></div>
+          <div class="form-group"><label>Password</label><input id="password" type="password" required></div>
+          <div id="login-error" class="error-message" style="display:none"></div>
+          <button type="submit" class="btn btn-primary"><span id="login-text">Login</span></button>
+          <div style="margin-top:.5rem;font-size:.9rem">Don't have an account? <a id="show-register" href="#">Register</a></div>
+        </form>
+        <form id="register-form" class="card-content" style="display:none">
+          <div class="form-group"><label>Name</label><input id="reg_name" type="text" required></div>
+          <div class="form-group"><label>Email</label><input id="reg_email" type="email" required></div>
+          <div class="form-group"><label>Password</label><input id="reg_password" type="password" required></div>
+          <div id="register-error" class="error-message" style="display:none"></div>
+          <button type="submit" class="btn btn-primary">Create Account</button>
+          <div style="margin-top:.5rem;font-size:.9rem">Already have an account? <a id="show-login" href="#">Login</a></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // If already logged in, go to app
+    (function(){
+      if (typeof getCurrentUser === 'function' && getCurrentUser()) {
+        window.location.href = 'index.html';
+      }
+    })();
+
+    function toggleAuthMode(mode){
+      var lf = document.getElementById('login-form');
+      var rf = document.getElementById('register-form');
+      var tt = document.getElementById('auth-title');
+      var lt = document.getElementById('login-text');
+      if (mode==='register'){
+        if (lf) lf.style.display='none';
+        if (rf) rf.style.display='block';
+        if (tt) tt.textContent='Create your account';
+      } else {
+        if (lf) lf.style.display='block';
+        if (rf) rf.style.display='none';
+        if (tt) tt.textContent='Sign in to continue';
+        if (lt) lt.textContent='Login';
+      }
+      var le = document.getElementById('login-error'); if (le) le.style.display='none';
+      var re = document.getElementById('register-error'); if (re) re.style.display='none';
+    }
+
+    // Bind UI
+    document.getElementById('show-register')?.addEventListener('click', function(e){ e.preventDefault(); toggleAuthMode('register'); });
+    document.getElementById('show-login')?.addEventListener('click', function(e){ e.preventDefault(); toggleAuthMode('login'); });
+
+    document.getElementById('login-form')?.addEventListener('submit', async function(e){
+      e.preventDefault();
+      var email = document.getElementById('email').value.trim();
+      var password = document.getElementById('password').value.trim();
+      var ok = false;
+      if (typeof doLogin === 'function') { ok = doLogin(email, password); }
+      if (!ok && typeof doRemoteLogin === 'function') { try{ ok = await doRemoteLogin(email, password); }catch(_){} }
+      if (ok){
+        window.location.href = 'index.html';
+      } else {
+        var err = document.getElementById('login-error');
+        if (err){ err.textContent = 'Invalid credentials'; err.style.display='block'; }
+      }
+    });
+
+    document.getElementById('register-form')?.addEventListener('submit', async function(e){
+      e.preventDefault();
+      var name = (document.getElementById('reg_name')?.value||'').trim();
+      var email = (document.getElementById('reg_email')?.value||'').trim();
+      var pass = (document.getElementById('reg_password')?.value||'').trim();
+      var err = document.getElementById('register-error');
+      if (!name || !email || !pass){ if(err){ err.textContent='Fill all fields'; err.style.display='block'; } return; }
+      try{
+        // Persist in Supabase first
+        var newId = (typeof idGen==='function'? idGen() : String(Date.now()));
+        if (window.supabaseClient){
+          const { error } = await window.supabaseClient.from('users').upsert([{ id:newId, name:name, email:email, password:pass, role:'customer' }], { onConflict: 'id' });
+          if (error) { throw error; }
+        }
+        // Mirror locally
+        var users = (typeof getUsers==='function' ? getUsers() : []);
+        if (!users.find(function(u){ return u.email===email; })){
+          var newUser = { id:newId, name:name, email:email, password:pass, role:'customer' };
+          if (typeof saveUsers==='function') { users.push(newUser); saveUsers(users); }
+        }
+        // Login (local first, then remote fallback)
+        var ok = false; if (typeof doLogin==='function') { ok = doLogin(email, pass); }
+        if (!ok && typeof doRemoteLogin==='function') { try{ ok = await doRemoteLogin(email, pass); }catch(_){} }
+        window.location.href = 'index.html';
+      }catch(_){ if(err){ err.textContent='Something went wrong'; err.style.display='block'; } }
+    });
+  </script>
+</body>
+</html>
+
+
