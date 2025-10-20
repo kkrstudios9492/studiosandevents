@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thanks for Shopping - Mango Mart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+  <script defer>
+    (function(){
+      // Read last order details saved before redirect
+      let order = null;
+      try {
+        order = JSON.parse(localStorage.getItem('lastOrder')||'null');
+      } catch(_) {}
+
+      function qs(id){ return document.getElementById(id); }
+
+      window.addEventListener('DOMContentLoaded', function(){
+        // Populate order details if available
+        if (order && order.id) {
+          const idEl = qs('thanks-order-id');
+          const totEl = qs('thanks-order-total');
+          if (idEl) idEl.textContent = '#' + order.id;
+          if (totEl) totEl.textContent = (order.total||0);
+        }
+
+        // CTA buttons
+        const viewOrdersBtn = qs('view-orders-btn');
+        const continueBtn = qs('continue-btn');
+        if (viewOrdersBtn) {
+          viewOrdersBtn.addEventListener('click', function(){
+            // Navigate back to app and open orders tab
+            window.location.href = 'index.html#orders';
+          });
+        }
+        if (continueBtn) {
+          continueBtn.addEventListener('click', function(){
+            // Navigate back to app home / products
+            window.location.href = 'index.html#products';
+          });
+        }
+      });
+    })();
+  </script>
+  <style>
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#fff;color:#111827}
+    .thanks-hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;background:linear-gradient(135deg,#f97316 0%,#ea580c 100%)}
+    .card{background:#fff;border-radius:20px;max-width:560px;width:100%;padding:2.25rem;box-shadow:0 20px 40px rgba(0,0,0,.12);text-align:center}
+    .icon{font-size:3.5rem;color:#10b981;margin-bottom:1rem}
+    h1{margin:.25rem 0 0 0;font-size:1.75rem}
+    p.lead{color:#6b7280;margin:0.75rem 0 1.25rem 0}
+    .details{background:#f9fafb;border-radius:12px;padding:1rem;text-align:left;margin:1.25rem 0}
+    .details p{margin:.25rem 0;color:#374151}
+    .actions{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+    .btn{border:none;border-radius:10px;padding:.75rem 1.25rem;cursor:pointer;font-weight:600}
+    .btn-primary{background:#f97316;color:#fff}
+    .btn-outline{background:#fff;border:1px solid #e5e7eb;color:#111827}
+    .btn:hover{opacity:.95}
+    @media (max-width:640px){.card{padding:1.5rem} h1{font-size:1.5rem}}
+  </style>
+</head>
+<body>
+  <main class="thanks-hero">
+    <section class="card">
+      <div class="icon">✅</div>
+      <h1>Thank you for shopping!</h1>
+      <p class="lead">Your order has been placed successfully and will be delivered soon.</p>
+      <div class="details">
+        <p><strong>Order ID:</strong> <span id="thanks-order-id">—</span></p>
+        <p><strong>Total Amount:</strong> ₹<span id="thanks-order-total">0</span></p>
+      </div>
+      <div class="actions">
+        <button id="view-orders-btn" class="btn btn-primary">View My Orders</button>
+        <button id="continue-btn" class="btn btn-outline">Continue Shopping</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+
+
+
