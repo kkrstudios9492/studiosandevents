@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Orders - Mango Mart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center h-16">
+                <!-- Left Section -->
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center text-gray-600 hover:text-emerald-600 transition-colors mr-4">
+                        <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                    </a>
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-emerald-600">Mango Mart</h1>
+                    </div>
+                </div>
+                
+                <!-- Center Section - Search Bar -->
+                <div class="flex-1 flex justify-center px-8">
+                    <div class="relative w-full max-w-md">
+                        <input type="text" placeholder="Search products..." 
+                            class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <!-- Right Section -->
+                <div class="flex items-center">
+                    <a href="index.html" class="relative p-2 text-gray-600 hover:text-emerald-600 transition-colors">
+                        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Orders Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Your Orders</h1>
+                    <p class="text-gray-600 mt-2">Track and manage your orders</p>
+                    <div id="user-info" class="text-sm text-gray-500 mt-1"></div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="filter-btn" class="flex items-center px-4 py-2 text-gray-600 hover:text-emerald-600 transition-colors border border-gray-300 rounded-lg">
+                        <i data-lucide="filter" class="w-4 h-4 mr-2"></i>
+                        Filter
+                    </button>
+                    <a href="index.html" class="flex items-center px-4 py-2 text-emerald-600 hover:text-emerald-700 transition-colors">
+                        <i data-lucide="shopping-bag" class="w-4 h-4 mr-2"></i>
+                        Continue Shopping
+                    </a>
+                    <button id="logout-btn" class="flex items-center px-4 py-2 text-red-600 hover:text-red-700 transition-colors border border-red-300 rounded-lg">
+                        <i data-lucide="log-out" class="w-4 h-4 mr-2"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Options -->
+        <div id="filter-options" class="hidden mb-6">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Filter Orders</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                        <select id="status-filter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            <option value="all">All Orders</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="preparing">Preparing</option>
+                            <option value="ready">Ready</option>
+                            <option value="out_for_delivery">Out for Delivery</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
+                        <select id="date-filter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            <option value="all">All Time</option>
+                            <option value="last-week">Last Week</option>
+                            <option value="last-month">Last Month</option>
+                            <option value="last-3-months">Last 3 Months</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Order Value</label>
+                        <select id="value-filter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            <option value="all">All Orders</option>
+                            <option value="0-500">₹0 - ₹500</option>
+                            <option value="500-1000">₹500 - ₹1000</option>
+                            <option value="1000+">Above ₹1000</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button id="apply-filter" class="w-full bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                            Apply Filter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders List -->
+        <div id="orders-container">
+            <!-- Orders will be loaded dynamically here -->
+        </div>
+
+    </main>
+
+    <script>
+        // Prevent main app initialization on orders page
+        window.ORDERS_PAGE = true;
+    </script>
+    <script src="js/mango-mart.js"></script>
+    <script>
+        // Initialize Supabase client (using global variables from mango-mart.js)
+        let ordersSupabase;
+        if (typeof window.supabase !== 'undefined') {
+            // Use the global Supabase URL and key from mango-mart.js
+            const supabaseUrl = 'https://nruafgayqspvluubsvwb.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydWFmZ2F5cXNwdmx1dWJzdndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4ODI1MTcsImV4cCI6MjA3NjQ1ODUxN30.hhnZq-mF24RYW9SfnorFNw-Wl51bK_mfDjQiN2WCNcA';
+            ordersSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            console.log('Supabase client initialized in orders.html');
+        } else {
+            console.error('Supabase module not loaded');
+        }
+        
+        // Initialize Lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+
+        // Load orders from Supabase (user-specific)
+        async function loadOrders() {
+            // Get current user session
+            const session = JSON.parse(localStorage.getItem('session') || 'null');
+            if (!session || !session.user) {
+                // Redirect to login if not authenticated
+                window.location.href = 'index.html';
+                return;
+            }
+
+            console.log('Current user:', session.user);
+            console.log('User ID:', session.user.id);
+            console.log('User Email:', session.user.email);
+            console.log('User Mobile:', session.user.mobile);
+            
+            try {
+                // Load orders from Supabase using the client
+                if (ordersSupabase) {
+                    const { data: allOrders, error } = await ordersSupabase
+                        .from('orders')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+                    
+                    if (error) {
+                        throw error;
+                    }
+                    
+                    console.log('All orders from Supabase:', allOrders);
+                    console.log('Total orders found:', allOrders.length);
+                
+                    // Filter orders for current user only
+                    console.log('=== FILTERING ORDERS ===');
+                    console.log('Current user session:', session.user);
+                    console.log('User ID:', session.user.id);
+                    console.log('User Email:', session.user.email);
+                    console.log('User Mobile:', session.user.mobile);
+                    
+                    const orders = allOrders.filter(order => {
+                        const matchById = order.customer_id === session.user.id;
+                        
+                        // Only match email if both are not null and are equal
+                        const matchByEmail = session.user.email && order.customer_email && 
+                                           session.user.email === order.customer_email;
+                        
+                        // Only match mobile if both are not null and are equal
+                        const matchByMobile = session.user.mobile && order.customer_mobile && 
+                                            session.user.mobile === order.customer_mobile;
+                        
+                        const isUserOrder = matchById || matchByEmail || matchByMobile;
+                        
+                        console.log(`Order ${order.id}:`);
+                        console.log(`  - customer_id: "${order.customer_id}" === "${session.user.id}" (match: ${matchById})`);
+                        console.log(`  - customer_email: "${order.customer_email}" === "${session.user.email}" (match: ${matchByEmail})`);
+                        console.log(`  - customer_mobile: "${order.customer_mobile}" === "${session.user.mobile}" (match: ${matchByMobile})`);
+                        console.log(`  - Is user order: ${isUserOrder}`);
+                        
+                        return isUserOrder;
+                    });
+                    
+                    console.log('User orders after filtering:', orders);
+                    console.log('User orders count:', orders.length);
+                    renderOrders(orders);
+                } else {
+                    throw new Error('Supabase client not available');
+                }
+                
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                // Fallback to localStorage
+                const allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const orders = allOrders.filter(order => 
+                    order.customerId === session.user.id || 
+                    order.customerEmail === session.user.email ||
+                    order.customerMobile === session.user.mobile
+                );
+                renderOrders(orders);
+            }
+        }
+
+        // Render orders function
+        function renderOrders(orders) {
+            const session = JSON.parse(localStorage.getItem('session') || 'null');
+            const ordersContainer = document.getElementById('orders-container');
+            
+            console.log('=== RENDER ORDERS CALLED ===');
+            console.log('Loading orders for user:', session?.user?.name);
+            console.log('User orders:', orders);
+            console.log('Orders container:', ordersContainer);
+            console.log('Orders length:', orders.length);
+
+            // Display user info
+            const userInfo = document.getElementById('user-info');
+            if (userInfo && session?.user) {
+                userInfo.innerHTML = `
+                    <span class="font-medium">Welcome, ${session.user.name}!</span>
+                    ${session.user.email ? `<span class="ml-2">(${session.user.email})</span>` : ''}
+                    ${session.user.mobile ? `<span class="ml-2">(${session.user.mobile})</span>` : ''}
+                `;
+            }
+            
+            if (orders.length === 0) {
+                console.log('No orders found, showing empty state');
+                // Show empty state
+                ordersContainer.innerHTML = `
+                    <div class="text-center py-12">
+                        <i data-lucide="package" class="w-16 h-16 text-gray-400 mx-auto mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">No orders found</h3>
+                        <p class="text-gray-600 mb-6">Start shopping to see your orders here</p>
+                        <a href="index.html" class="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors inline-flex items-center">
+                            <i data-lucide="shopping-bag" class="w-4 h-4 mr-2"></i>
+                            Start Shopping
+                        </a>
+                    </div>
+                `;
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+                return;
+            }
+
+            console.log('Rendering orders, total count:', orders.length);
+            
+            // Separate current and previous orders
+            const currentOrders = orders.filter(order => {
+                const orderStatus = order.status || 'pending';
+                const deliveryStatus = order.delivery_status || 'pending';
+                
+                // Order is current if:
+                // 1. Order status is not delivered/cancelled AND
+                // 2. Delivery status is not delivered
+                return !['delivered', 'cancelled'].includes(orderStatus) && 
+                       deliveryStatus !== 'delivered';
+            });
+            
+            const previousOrders = orders.filter(order => {
+                const orderStatus = order.status || 'pending';
+                const deliveryStatus = order.delivery_status || 'pending';
+                
+                // Order is previous if:
+                // 1. Order status is delivered/cancelled OR
+                // 2. Delivery status is delivered
+                return ['delivered', 'cancelled'].includes(orderStatus) || 
+                       deliveryStatus === 'delivered';
+            });
+            
+            console.log('Current orders:', currentOrders.length);
+            console.log('Previous orders:', previousOrders.length);
+
+            // Render orders
+            ordersContainer.innerHTML = `
+                <!-- Current Orders Section -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">Current Orders</h2>
+                        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-sm font-medium rounded-full">${currentOrders.length} Active</span>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        ${currentOrders.map(order => renderOrderCard(order)).join('')}
+                    </div>
+                </div>
+
+                <!-- Previous Orders Section -->
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">Previous Orders</h2>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-800 text-sm font-medium rounded-full">${previousOrders.length} Completed</span>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        ${previousOrders.map(order => renderOrderCard(order)).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Re-initialize icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+
+            // Attach event listeners to new buttons
+            attachOrderEventListeners();
+        }
+
+        // Render individual order card
+        function renderOrderCard(order) {
+            console.log('Rendering order card:', order);
+            
+            const statusColors = {
+                'pending': 'bg-yellow-100 text-yellow-800',
+                'confirmed': 'bg-blue-100 text-blue-800',
+                'preparing': 'bg-orange-100 text-orange-800',
+                'ready': 'bg-purple-100 text-purple-800',
+                'out_for_delivery': 'bg-indigo-100 text-indigo-800',
+                'delivered': 'bg-green-100 text-green-800',
+                'cancelled': 'bg-red-100 text-red-800'
+            };
+
+            const statusText = {
+                'pending': 'Pending',
+                'confirmed': 'Confirmed',
+                'preparing': 'Preparing',
+                'ready': 'Ready',
+                'out_for_delivery': 'Out for Delivery',
+                'delivered': 'Delivered',
+                'cancelled': 'Cancelled'
+            };
+
+            const orderDate = new Date(order.createdAt).toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+
+            // Handle different order status formats
+            const orderStatus = order.status || 'pending';
+            const orderPaymentStatus = order.payment_status || order.paymentStatus || 'pending';
+            const deliveryStatus = order.delivery_status || 'pending';
+            
+            // Order is current if it's not delivered/cancelled and delivery status is not delivered
+            const isCurrentOrder = !['delivered', 'cancelled'].includes(orderStatus) && 
+                                 deliveryStatus !== 'delivered';
+
+            return `
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Order #${order.id}</h3>
+                            <p class="text-sm text-gray-600">Placed on ${orderDate}</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-3 py-1 rounded-full text-sm font-medium ${statusColors[orderStatus] || 'bg-gray-100 text-gray-800'}">
+                                ${statusText[orderStatus] || orderStatus}
+                            </span>
+                            ${order.delivery_status ? `
+                                <span class="px-3 py-1 rounded-full text-sm font-medium ${getDeliveryStatusClass(order.delivery_status)}">
+                                    ${getDeliveryStatusText(order.delivery_status)}
+                                </span>
+                            ` : ''}
+                            ${order.delivery_agent_name ? `
+                                <span class="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                    Agent: ${order.delivery_agent_name}
+                                </span>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3 mb-4">
+                        ${order.items && order.items.length > 0 ? order.items.map(item => `
+                            <div class="flex items-center space-x-3">
+                                <img src="${item.image || item.product_image || 'https://images.unsplash.com/photo-1605027990121-75fd594d6565?w=400'}" 
+                                     alt="${item.name || item.product_name || 'Product'}" 
+                                     class="w-12 h-12 rounded-lg object-cover">
+                                <div class="flex-1">
+                                    <h4 class="text-sm font-medium text-gray-900">${item.name || item.product_name || 'Product'}</h4>
+                                    <p class="text-sm text-gray-600">Qty: ${item.quantity || 1} × ₹${item.price || item.product_price || 0}</p>
+                                    ${item.description ? `<p class="text-xs text-gray-500 mt-1">${item.description.substring(0, 40)}...</p>` : ''}
+                                </div>
+                                <div class="text-sm font-medium text-gray-900">
+                                    ₹${((item.price || item.product_price || 0) * (item.quantity || 1)).toFixed(2)}
+                                </div>
+                            </div>
+                        `).join('') : `
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 rounded-lg bg-gray-200 flex items-center justify-center">
+                                    <i data-lucide="package" class="w-6 h-6 text-gray-400"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="text-sm font-medium text-gray-900">Order Items</h4>
+                                    <p class="text-sm text-gray-600">Items details not available</p>
+                                </div>
+                                <div class="text-sm font-medium text-gray-900">
+                                    ₹${order.total_amount || order.total || order.totalAmount || 0}
+                                </div>
+                            </div>
+                        `}
+                    </div>
+                    
+                    <div class="border-t pt-4">
+                        <div class="flex justify-between items-center">
+                            <div class="text-sm text-gray-600">
+                                <p>Total: <span class="font-semibold text-lg text-gray-900">₹${(order.total_amount || order.totalAmount || order.total || 0).toFixed(2)}</span></p>
+                                <p>Payment: ${orderPaymentStatus === 'paid' ? 'Paid' : 'Pending'}</p>
+                                ${order.delivery_status ? `
+                                    <p class="text-sm text-gray-600">
+                                        <strong>Delivery Status:</strong> 
+                                        <span class="${getDeliveryStatusClass(order.delivery_status)} px-2 py-1 rounded-full text-xs">
+                                            ${getDeliveryStatusText(order.delivery_status)}
+                                        </span>
+                                    </p>
+                                ` : ''}
+                                ${order.delivery_agent_name ? `<p class="text-sm text-gray-600"><strong>Delivery Agent:</strong> ${order.delivery_agent_name}</p>` : ''}
+                                ${orderStatus === 'delivered' ? `<p class="text-green-600">Delivered on ${new Date(order.paid_at || order.paidAt || order.created_at || order.createdAt).toLocaleDateString('en-IN')}</p>` : ''}
+                                ${orderStatus === 'out_for_delivery' ? '<p class="text-indigo-600">Expected delivery: Today by 6:00 PM</p>' : ''}
+                                ${order.delivery_status === 'picked_up' ? '<p class="text-blue-600">Order picked up and ready for delivery</p>' : ''}
+                                ${order.delivery_status === 'out_for_delivery' ? '<p class="text-orange-600">Out for delivery - Track your order</p>' : ''}
+                            </div>
+                            <div class="flex space-x-2">
+                                ${isCurrentOrder ? `
+                                    ${orderStatus === 'pending' ? '<button class="px-4 py-2 text-sm text-red-600 hover:text-red-700 transition-colors border border-red-300 rounded-lg hover:bg-red-50 cancel-order" data-order-id="' + order.id + '">Cancel Order</button>' : ''}
+                                    <button class="px-4 py-2 text-sm text-emerald-600 hover:text-emerald-700 transition-colors border border-emerald-300 rounded-lg hover:bg-emerald-50 track-order" data-order-id="${order.id}">Track Order</button>
+                                ` : `
+                                    <button class="px-4 py-2 text-sm text-emerald-600 hover:text-emerald-700 transition-colors border border-emerald-300 rounded-lg hover:bg-emerald-50 reorder-btn" data-order-id="${order.id}">Reorder</button>
+                                    <button class="px-4 py-2 text-sm text-gray-600 hover:text-gray-700 transition-colors border border-gray-300 rounded-lg hover:bg-gray-50 rate-order" data-order-id="${order.id}">Rate Order</button>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Attach event listeners to order action buttons
+        function attachOrderEventListeners() {
+            // Track order
+            document.querySelectorAll('.track-order').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    alert('Order tracking feature coming soon!');
+                });
+            });
+
+            // Cancel order
+            document.querySelectorAll('.cancel-order').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const orderId = e.target.dataset.orderId;
+                    if (confirm('Are you sure you want to cancel this order?')) {
+                        // Update order status to cancelled
+                        const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                        const orderIndex = orders.findIndex(order => order.id === orderId);
+                        if (orderIndex !== -1) {
+                            orders[orderIndex].status = 'cancelled';
+                            localStorage.setItem('orders', JSON.stringify(orders));
+                            loadOrders(); // Reload orders
+                            alert('Order cancelled successfully!');
+                        }
+                    }
+                });
+            });
+
+            // Reorder
+            document.querySelectorAll('.reorder-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const orderId = e.target.dataset.orderId;
+                    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                    const order = orders.find(order => order.id === orderId);
+                    
+                    if (order) {
+                        // Add items to cart
+                        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                        order.items.forEach(item => {
+                            const existingItem = cart.find(cartItem => cartItem.id === item.id);
+                            if (existingItem) {
+                                existingItem.quantity += item.quantity;
+                            } else {
+                                cart.push({...item});
+                            }
+                        });
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        alert('Items added to cart for reorder!');
+                    }
+                });
+            });
+
+            // Rate order
+            document.querySelectorAll('.rate-order').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    alert('Rating feature coming soon!');
+                });
+            });
+        }
+
+        // Filter functionality
+        const filterBtn = document.getElementById('filter-btn');
+        const filterOptions = document.getElementById('filter-options');
+        const applyFilterBtn = document.getElementById('apply-filter');
+
+        if (filterBtn) {
+            filterBtn.addEventListener('click', () => {
+                filterOptions.classList.toggle('hidden');
+            });
+        }
+
+        if (applyFilterBtn) {
+            applyFilterBtn.addEventListener('click', () => {
+                const statusFilter = document.getElementById('status-filter').value;
+                const dateFilter = document.getElementById('date-filter').value;
+                const valueFilter = document.getElementById('value-filter').value;
+                
+                // Here you would implement the actual filtering logic
+                console.log('Filtering by:', { statusFilter, dateFilter, valueFilter });
+                
+                // Hide filter options after applying
+                filterOptions.classList.add('hidden');
+            });
+        }
+
+
+        // Logout button
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.removeItem('session');
+                    console.log('User logged out');
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+
+
+        // Fallback formatCurrency function if not available
+        function formatCurrency(amount) {
+            if (typeof window.formatCurrency === 'function') {
+                return window.formatCurrency(amount);
+            }
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR'
+            }).format(amount);
+        }
+
+
+        // Listen for order changes from other pages
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'orders') {
+                console.log('Orders updated in localStorage, reloading...');
+                loadOrders();
+            }
+        });
+
+        // Listen for custom order events
+        window.addEventListener('orderCreated', () => {
+            console.log('Order created event received, reloading orders...');
+            loadOrders();
+        });
+
+        // Clean up orders without proper user information
+        function cleanupOrders() {
+            const allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+            const session = JSON.parse(localStorage.getItem('session') || 'null');
+            
+            if (!session || !session.user) return;
+            
+            // Find orders that don't belong to any user (orphaned orders)
+            const orphanedOrders = allOrders.filter(order => 
+                !order.customerId && !order.customerEmail && !order.customerMobile
+            );
+            
+            if (orphanedOrders.length > 0) {
+                console.log('Found orphaned orders:', orphanedOrders);
+                // Remove orphaned orders
+                const cleanOrders = allOrders.filter(order => 
+                    order.customerId || order.customerEmail || order.customerMobile
+                );
+                localStorage.setItem('orders', JSON.stringify(cleanOrders));
+                console.log('Cleaned up orphaned orders');
+            }
+        }
+
+
+        // Load orders when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, loading orders...');
+            console.log('Supabase client status:', !!ordersSupabase);
+            
+            if (ordersSupabase) {
+                console.log('✅ Supabase client is ready');
+            } else {
+                console.error('❌ Supabase client not initialized');
+            }
+            
+            cleanupOrders(); // Clean up orphaned orders
+            loadOrders();
+        });
+
+        // Delivery status helper functions
+        function getDeliveryStatusText(status) {
+            const statusMap = {
+                'pending': 'Pending Pickup',
+                'picked_up': 'Picked Up',
+                'out_for_delivery': 'Out for Delivery',
+                'delivered': 'Delivered'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getDeliveryStatusClass(status) {
+            const statusColors = {
+                'pending': 'bg-yellow-100 text-yellow-800',
+                'picked_up': 'bg-blue-100 text-blue-800',
+                'out_for_delivery': 'bg-purple-100 text-purple-800',
+                'delivered': 'bg-green-100 text-green-800'
+            };
+            return statusColors[status] || 'bg-gray-100 text-gray-800';
+        }
+    </script>
+</body>
+</html>
