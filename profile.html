@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Mango Mart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center h-16">
+                <!-- Left Section -->
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center text-gray-600 hover:text-emerald-600 transition-colors mr-4">
+                        <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                    </a>
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-emerald-600">Mango Mart</h1>
+                    </div>
+                </div>
+                
+                <!-- Center Section - Search Bar -->
+                <div class="flex-1 flex justify-center px-8">
+                    <div class="relative w-full max-w-md">
+                        <input type="text" placeholder="Search products..." 
+                            class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <!-- Right Section -->
+                <div class="flex items-center">
+                    <a href="index.html" class="relative p-2 text-gray-600 hover:text-emerald-600 transition-colors">
+                        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+            <div class="text-center mb-8">
+                <div class="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="user" class="w-12 h-12 text-emerald-600"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">My Profile</h1>
+                <p class="text-gray-600">Manage your account settings and preferences</p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Personal Information -->
+                <div class="border-b pb-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Personal Information</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <input type="text" value="John Doe" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <input type="email" value="john@example.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                            <input type="tel" value="+91 9876543210" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+                            <input type="date" value="1990-01-01" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Information -->
+                <div class="border-b pb-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Address Information</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Street Address</label>
+                            <input type="text" value="123 Main Street" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">City</label>
+                                <input type="text" value="Bangalore" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">State</label>
+                                <input type="text" value="Karnataka" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">PIN Code</label>
+                                <input type="text" value="560001" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preferences -->
+                <div class="border-b pb-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Preferences</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="notifications" checked class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
+                            <label for="notifications" class="ml-2 text-sm text-gray-700">Email notifications</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="sms" class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
+                            <label for="sms" class="ml-2 text-sm text-gray-700">SMS notifications</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="newsletter" checked class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
+                            <label for="newsletter" class="ml-2 text-sm text-gray-700">Newsletter subscription</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button class="flex-1 bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors">
+                        <i data-lucide="save" class="w-4 h-4 mr-2 inline"></i>
+                        Save Changes
+                    </button>
+                    <button class="flex-1 bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                        <i data-lucide="key" class="w-4 h-4 mr-2 inline"></i>
+                        Change Password
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/mango-mart.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Check if user is logged in
+        const session = JSON.parse(localStorage.getItem('session') || 'null');
+        if (!session || !session.user) {
+            window.location.href = 'index.html';
+        }
+
+        // Load user profile data
+        async function loadUserProfile() {
+            try {
+                // Get user profile from database
+                const response = await fetch('https://nruafgayqspvluubsvwb.supabase.co/rest/v1/user_profiles', {
+                    method: 'GET',
+                    headers: {
+                        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydWFmZ2F5cXNwdmx1dWJzdndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4ODI1MTcsImV4cCI6MjA3NjQ1ODUxN30.hhnZq-mF24RYW9SfnorFNw-Wl51bK_mfDjQiN2WCNcA',
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydWFmZ2F5cXNwdmx1dWJzdndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4ODI1MTcsImV4cCI6MjA3NjQ1ODUxN30.hhnZq-mF24RYW9SfnorFNw-Wl51bK_mfDjQiN2WCNcA',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const profiles = await response.json();
+                    const userProfile = profiles.find(p => p.user_id === session.user.id);
+                    if (userProfile) {
+                        populateProfileForm(userProfile);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                // Fallback to localStorage
+                const profile = JSON.parse(localStorage.getItem(`profile_${session.user.id}`) || '{}');
+                if (Object.keys(profile).length > 0) {
+                    populateProfileForm(profile);
+                }
+            }
+        }
+
+        // Populate profile form with user data
+        function populateProfileForm(profile) {
+            document.getElementById('full-name').value = profile.full_name || session.user.name || '';
+            document.getElementById('email').value = profile.email || session.user.email || '';
+            document.getElementById('mobile').value = profile.mobile || session.user.mobile || '';
+            document.getElementById('address').value = profile.address || '';
+            document.getElementById('city').value = profile.city || '';
+            document.getElementById('state').value = profile.state || '';
+            document.getElementById('pincode').value = profile.pincode || '';
+            document.getElementById('date-of-birth').value = profile.date_of_birth || '';
+            document.getElementById('gender').value = profile.gender || '';
+        }
+
+        // Save profile data
+        async function saveProfile() {
+            const profileData = {
+                full_name: document.getElementById('full-name').value,
+                email: document.getElementById('email').value,
+                mobile: document.getElementById('mobile').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                state: document.getElementById('state').value,
+                pincode: document.getElementById('pincode').value,
+                date_of_birth: document.getElementById('date-of-birth').value,
+                gender: document.getElementById('gender').value,
+                preferences: {
+                    notifications: document.getElementById('notifications').checked,
+                    marketing: document.getElementById('marketing').checked
+                }
+            };
+
+            try {
+                // Save to Supabase
+                const response = await fetch('https://nruafgayqspvluubsvwb.supabase.co/rest/v1/user_profiles', {
+                    method: 'POST',
+                    headers: {
+                        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydWFmZ2F5cXNwdmx1dWJzdndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4ODI1MTcsImV4cCI6MjA3NjQ1ODUxN30.hhnZq-mF24RYW9SfnorFNw-Wl51bK_mfDjQiN2WCNcA',
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydWFmZ2F5cXNwdmx1dWJzdndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4ODI1MTcsImV4cCI6MjA3NjQ1ODUxN30.hhnZq-mF24RYW9SfnorFNw-Wl51bK_mfDjQiN2WCNcA',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: session.user.id,
+                        ...profileData
+                    })
+                });
+
+                if (response.ok) {
+                    // Also save to localStorage as backup
+                    localStorage.setItem(`profile_${session.user.id}`, JSON.stringify(profileData));
+                    alert('Profile updated successfully!');
+                } else {
+                    throw new Error('Failed to save profile');
+                }
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                // Fallback to localStorage
+                localStorage.setItem(`profile_${session.user.id}`, JSON.stringify(profileData));
+                alert('Profile saved locally!');
+            }
+        }
+
+        // Change password
+        async function changePassword() {
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match!');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                alert('Password must be at least 6 characters long!');
+                return;
+            }
+
+            try {
+                // Update password in database
+                const response = await fetch('https://nruafgayqspvluubsvwb.supabase.co/rest/v1/users', {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydWFmZ2F5cXNwdmx1dWJzdndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4ODI1MTcsImV4cCI6MjA3NjQ1ODUxN30.hhnZq-mF24RYW9SfnorFNw-Wl51bK_mfDjQiN2WCNcA',
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydWFmZ2F5cXNwdmx1dWJzdndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4ODI1MTcsImV4cCI6MjA3NjQ1ODUxN30.hhnZq-mF24RYW9SfnorFNw-Wl51bK_mfDjQiN2WCNcA',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        password: btoa(newPassword + 'mango_mart_salt')
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Password changed successfully!');
+                    document.getElementById('current-password').value = '';
+                    document.getElementById('new-password').value = '';
+                    document.getElementById('confirm-password').value = '';
+                } else {
+                    throw new Error('Failed to change password');
+                }
+            } catch (error) {
+                console.error('Error changing password:', error);
+                alert('Error changing password. Please try again.');
+            }
+        }
+
+        // Add event listeners
+        document.getElementById('save-profile').addEventListener('click', saveProfile);
+        document.getElementById('change-password-btn').addEventListener('click', changePassword);
+
+        // Load profile data on page load
+        loadUserProfile();
+    </script>
+</body>
+</html>
