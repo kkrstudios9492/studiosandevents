@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Product Data - Mango Mart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Test Product Data</h1>
+        
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Test Product Selection</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button id="test-spinach" class="btn btn-primary">Test Spinach Product</button>
+                <button id="test-basmati" class="btn btn-secondary">Test Basmati Product</button>
+                <button id="test-all-products" class="btn btn-warning">Show All Products</button>
+                <button id="test-orders" class="btn btn-danger">Show Recent Orders</button>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Test Results</h2>
+            <div id="test-results" class="space-y-4">
+                <p class="text-gray-600">Click buttons to test product data...</p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .btn {
+            @apply px-4 py-2 rounded-lg font-medium transition-colors;
+        }
+        .btn-primary {
+            @apply bg-emerald-600 text-white hover:bg-emerald-700;
+        }
+        .btn-secondary {
+            @apply bg-gray-600 text-white hover:bg-gray-700;
+        }
+        .btn-warning {
+            @apply bg-yellow-600 text-white hover:bg-yellow-700;
+        }
+        .btn-danger {
+            @apply bg-red-600 text-white hover:bg-red-700;
+        }
+    </style>
+
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://nruafgayqspvluubsvwb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydWFmZ2F5cXNwdmx1dWJzdndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4ODI1MTcsImV4cCI6MjA3NjQ1ODUxN30.hhnZq-mF24RYW9SfnorFNw-Wl51bK_mfDjQiN2WCNcA';
+
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        function logResult(title, data) {
+            const results = document.getElementById('test-results');
+            const div = document.createElement('div');
+            div.className = 'p-4 bg-gray-50 rounded-lg';
+            div.innerHTML = `
+                <h3 class="font-semibold text-gray-900 mb-2">${title}</h3>
+                <pre class="text-xs text-gray-600 overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
+            `;
+            results.appendChild(div);
+        }
+
+        async function testSpinach() {
+            try {
+                const { data: products, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .ilike('name', '%spinach%');
+
+                if (error) {
+                    logResult('Error fetching spinach products:', error);
+                    return;
+                }
+
+                logResult(`Found ${products.length} spinach products:`, products);
+
+                if (products.length > 0) {
+                    const spinach = products[0];
+                    logResult('First spinach product details:', {
+                        id: spinach.id,
+                        name: spinach.name,
+                        price: spinach.price,
+                        image: spinach.image,
+                        description: spinach.description
+                    });
+                }
+
+            } catch (error) {
+                logResult('Error in testSpinach:', error);
+            }
+        }
+
+        async function testBasmati() {
+            try {
+                const { data: products, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .or('name.ilike.%basmati%,name.ilike.%rice%');
+
+                if (error) {
+                    logResult('Error fetching basmati/rice products:', error);
+                    return;
+                }
+
+                logResult(`Found ${products.length} basmati/rice products:`, products);
+
+                if (products.length > 0) {
+                    const basmati = products[0];
+                    logResult('First basmati/rice product details:', {
+                        id: basmati.id,
+                        name: basmati.name,
+                        price: basmati.price,
+                        image: basmati.image,
+                        description: basmati.description
+                    });
+                }
+
+            } catch (error) {
+                logResult('Error in testBasmati:', error);
+            }
+        }
+
+        async function testAllProducts() {
+            try {
+                const { data: products, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .order('name');
+
+                if (error) {
+                    logResult('Error fetching all products:', error);
+                    return;
+                }
+
+                logResult(`Found ${products.length} total products:`, products);
+
+                // Look for any products that might be causing confusion
+                const problematicProducts = products.filter(p => 
+                    p.name.toLowerCase().includes('spinach') || 
+                    p.name.toLowerCase().includes('basmati') || 
+                    p.name.toLowerCase().includes('rice')
+                );
+
+                if (problematicProducts.length > 0) {
+                    logResult('Potentially problematic products:', problematicProducts);
+                }
+
+            } catch (error) {
+                logResult('Error in testAllProducts:', error);
+            }
+        }
+
+        async function testOrders() {
+            try {
+                const { data: orders, error } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                if (error) {
+                    logResult('Error fetching orders:', error);
+                    return;
+                }
+
+                logResult(`Found ${orders.length} recent orders:`, orders);
+
+                // Check for product mismatches in orders
+                orders.forEach((order, index) => {
+                    if (order.items && Array.isArray(order.items)) {
+                        order.items.forEach((item, itemIndex) => {
+                            logResult(`Order ${order.id} - Item ${itemIndex}:`, {
+                                id: item.id,
+                                name: item.name,
+                                product_name: item.product_name,
+                                price: item.price,
+                                product_price: item.product_price
+                            });
+                        });
+                    }
+                });
+
+            } catch (error) {
+                logResult('Error in testOrders:', error);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('test-spinach').addEventListener('click', testSpinach);
+        document.getElementById('test-basmati').addEventListener('click', testBasmati);
+        document.getElementById('test-all-products').addEventListener('click', testAllProducts);
+        document.getElementById('test-orders').addEventListener('click', testOrders);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            logResult('Test tool loaded', 'Click buttons to investigate the product mismatch issue.');
+        });
+    </script>
+</body>
+</html>
+
+

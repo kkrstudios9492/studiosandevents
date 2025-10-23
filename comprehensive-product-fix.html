@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Product Fix</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 15px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 3px; }
+        .error { background: #f8d7da; color: #721c24; }
+        .success { background: #d4edda; color: #155724; }
+        .warning { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <h1>Comprehensive Product Fix</h1>
+    
+    <div class="section">
+        <h3>1. Check Current State</h3>
+        <button onclick="checkCurrentState()">Check Current State</button>
+        <div id="current-state" class="result"></div>
+    </div>
+
+    <div class="section">
+        <h3>2. Fix Product Mismatches</h3>
+        <button onclick="fixProductMismatches()">Fix Product Mismatches</button>
+        <div id="fix-results" class="result"></div>
+    </div>
+
+    <div class="section">
+        <h3>3. Test Order Creation</h3>
+        <button onclick="testCorrectOrderCreation()">Test Correct Order Creation</button>
+        <div id="test-results" class="result"></div>
+    </div>
+
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://nruafgayqspvluubsvwb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydWFmZ2F5cXNwdmx1dWJzdndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIxMjQ5NzQsImV4cCI6MjA0NzcwMDk3NH0.8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q';
+        
+        let supabase;
+        let supabaseReady = false;
+
+        // Initialize Supabase
+        async function initSupabase() {
+            try {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                supabaseReady = true;
+                console.log('Supabase initialized successfully');
+                return true;
+            } catch (error) {
+                console.error('Failed to initialize Supabase:', error);
+                return false;
+            }
+        }
+
+        async function checkCurrentState() {
+            const resultsDiv = document.getElementById('current-state');
+            resultsDiv.innerHTML = '<p>Checking current state...</p>';
+
+            if (!supabaseReady) {
+                await initSupabase();
+            }
+
+            try {
+                // Get all products
+                const { data: products, error: productsError } = await supabase
+                    .from('products')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (productsError) {
+                    resultsDiv.innerHTML = `<div class="error">Error loading products: ${productsError.message}</div>`;
+                    return;
+                }
+
+                // Get recent orders
+                const { data: orders, error: ordersError } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(10);
+
+                if (ordersError) {
+                    resultsDiv.innerHTML = `<div class="error">Error loading orders: ${ordersError.message}</div>`;
+                    return;
+                }
+
+                let html = '<h4>Current Products in Database:</h4>';
+                products.forEach(product => {
+                    html += `<div style="margin: 10px 0; padding: 10px; border: 1px solid #ddd;">
+                        <strong>ID:</strong> ${product.id}<br>
+                        <strong>Name:</strong> ${product.name}<br>
+                        <strong>Price:</strong> ₹${product.price}<br>
+                        <strong>Category:</strong> ${product.main_category}
+                    </div>`;
+                });
+
+                html += '<h4>Recent Orders Analysis:</h4>';
+                let mismatchCount = 0;
+                orders.forEach(order => {
+                    const firstItemId = order.items && order.items.length > 0 ? order.items[0].id : null;
+                    const isMismatched = order.product_id && firstItemId && order.product_id !== firstItemId;
+                    if (isMismatched) mismatchCount++;
+
+                    html += `<div style="margin: 10px 0; padding: 10px; border: 1px solid ${isMismatched ? '#dc3545' : '#28a745'};">
+                        <strong>Order ID:</strong> ${order.id}<br>
+                        <strong>Product ID:</strong> ${order.product_id}<br>
+                        <strong>First Item ID:</strong> ${firstItemId}<br>
+                        <strong>First Item Name:</strong> ${order.items && order.items.length > 0 ? order.items[0].name : 'N/A'}<br>
+                        <strong>Status:</strong> ${isMismatched ? '<span style="color: #dc3545;">MISMATCHED</span>' : '<span style="color: #28a745;">OK</span>'}
+                    </div>`;
+                });
+
+                html += `<div class="${mismatchCount > 0 ? 'warning' : 'success'}">
+                    <strong>Summary:</strong> Found ${mismatchCount} orders with mismatched product_id
+                </div>`;
+
+                resultsDiv.innerHTML = html;
+
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Check failed: ${error.message}</div>`;
+            }
+        }
+
+        async function fixProductMismatches() {
+            const resultsDiv = document.getElementById('fix-results');
+            resultsDiv.innerHTML = '<p>Fixing product mismatches...</p>';
+
+            if (!supabaseReady) {
+                await initSupabase();
+            }
+
+            try {
+                // Get all orders
+                const { data: orders, error: ordersError } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (ordersError) {
+                    resultsDiv.innerHTML = `<div class="error">Error loading orders: ${ordersError.message}</div>`;
+                    return;
+                }
+
+                let fixedCount = 0;
+                let errorCount = 0;
+                let html = '<h4>Fixing Product Mismatches:</h4>';
+
+                for (const order of orders) {
+                    if (order.items && order.items.length > 0) {
+                        const firstItem = order.items[0];
+                        const correctProductId = firstItem.id;
+                        
+                        // Update the product_id to match the first item's ID
+                        if (order.product_id !== correctProductId) {
+                            const { error: updateError } = await supabase
+                                .from('orders')
+                                .update({ product_id: correctProductId })
+                                .eq('id', order.id);
+
+                            if (updateError) {
+                                html += `<div class="error">Failed to fix order ${order.id}: ${updateError.message}</div>`;
+                                errorCount++;
+                            } else {
+                                html += `<div class="success">Fixed order ${order.id}: product_id updated from ${order.product_id} to ${correctProductId}</div>`;
+                                fixedCount++;
+                            }
+                        }
+                    }
+                }
+
+                html += `<div class="${errorCount > 0 ? 'warning' : 'success'}">
+                    <strong>Fix Summary:</strong> Fixed ${fixedCount} orders, ${errorCount} errors
+                </div>`;
+                resultsDiv.innerHTML = html;
+
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Fix failed: ${error.message}</div>`;
+            }
+        }
+
+        async function testCorrectOrderCreation() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<p>Testing correct order creation...</p>';
+
+            if (!supabaseReady) {
+                await initSupabase();
+            }
+
+            try {
+                // Create a test order with correct product data
+                const testOrder = {
+                    customer_name: 'Test Customer - Fixed',
+                    customer_email: 'test-fixed@example.com',
+                    customer_mobile: '9876543210',
+                    customer_address: '123 Test Street',
+                    customer_landmark: 'Near Test Mall',
+                    customer_pincode: '123456',
+                    items: [{
+                        id: 'prod-1',
+                        name: 'Fresh Mangoes',
+                        price: 120,
+                        quantity: 1,
+                        image: 'https://images.unsplash.com/photo-1605027990121-75fd594d6565?w=400'
+                    }],
+                    product_id: 'prod-1', // This should match the first item's ID
+                    total_amount: 120,
+                    status: 'pending',
+                    payment_status: 'pending',
+                    created_at: new Date().toISOString(),
+                    delivery_status: 'pending'
+                };
+
+                const { data, error } = await supabase
+                    .from('orders')
+                    .insert([testOrder])
+                    .select()
+                    .single();
+
+                if (error) {
+                    resultsDiv.innerHTML = `<div class="error">Error creating test order: ${error.message}</div>`;
+                    return;
+                }
+
+                // Verify the order was created correctly
+                const { data: verifyOrder, error: verifyError } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .eq('id', data.id)
+                    .single();
+
+                if (verifyError) {
+                    resultsDiv.innerHTML = `<div class="error">Error verifying order: ${verifyError.message}</div>`;
+                    return;
+                }
+
+                const isCorrect = verifyOrder.product_id === verifyOrder.items[0].id;
+                
+                resultsDiv.innerHTML = `
+                    <div class="success">Test order created successfully!</div>
+                    <div><strong>Order ID:</strong> ${data.id}</div>
+                    <div><strong>Product ID:</strong> ${verifyOrder.product_id}</div>
+                    <div><strong>First Item ID:</strong> ${verifyOrder.items[0].id}</div>
+                    <div><strong>First Item Name:</strong> ${verifyOrder.items[0].name}</div>
+                    <div class="${isCorrect ? 'success' : 'error'}">
+                        <strong>Status:</strong> ${isCorrect ? 'CORRECT - Product ID matches first item ID' : 'INCORRECT - Product ID does not match first item ID'}
+                    </div>
+                `;
+
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Test failed: ${error.message}</div>`;
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initSupabase();
+        });
+    </script>
+</body>
+</html>

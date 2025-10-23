@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Product Mismatch - Mango Mart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Debug Product Mismatch</h1>
+        
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Check Orders and Products</h2>
+            <button id="debug-orders" class="btn btn-primary mb-4">Check Orders in Database</button>
+            <button id="debug-products" class="btn btn-secondary mb-4">Check Products in Database</button>
+            <button id="debug-cart" class="btn btn-warning mb-4">Check Current Cart</button>
+            <div id="debug-results" class="text-sm text-gray-600">
+                Click buttons to debug the product mismatch issue
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Debug Results</h2>
+            <div id="debug-output" class="space-y-4">
+                <p class="text-gray-600">Debug results will appear here...</p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .btn {
+            @apply px-4 py-2 rounded-lg font-medium transition-colors mr-2;
+        }
+        .btn-primary {
+            @apply bg-emerald-600 text-white hover:bg-emerald-700;
+        }
+        .btn-secondary {
+            @apply bg-gray-600 text-white hover:bg-gray-700;
+        }
+        .btn-warning {
+            @apply bg-yellow-600 text-white hover:bg-yellow-700;
+        }
+    </style>
+
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://nruafgayqspvluubsvwb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ydWFmZ2F5cXNwdmx1dWJzdndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4ODI1MTcsImV4cCI6MjA3NjQ1ODUxN30.hhnZq-mF24RYW9SfnorFNw-Wl51bK_mfDjQiN2WCNcA';
+
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        function logDebug(message, data = null) {
+            const output = document.getElementById('debug-output');
+            const div = document.createElement('div');
+            div.className = 'p-4 bg-gray-50 rounded-lg';
+            div.innerHTML = `
+                <h3 class="font-semibold text-gray-900 mb-2">${message}</h3>
+                ${data ? `<pre class="text-xs text-gray-600 overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>` : ''}
+            `;
+            output.appendChild(div);
+        }
+
+        async function debugOrders() {
+            try {
+                logDebug('Fetching orders from Supabase...');
+                const { data: orders, error } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(10);
+
+                if (error) {
+                    logDebug('Error fetching orders:', error);
+                    return;
+                }
+
+                logDebug(`Found ${orders.length} orders:`, orders);
+
+                // Check for product mismatches
+                orders.forEach(order => {
+                    if (order.items && Array.isArray(order.items)) {
+                        order.items.forEach((item, index) => {
+                            logDebug(`Order ${order.id} - Item ${index}:`, {
+                                id: item.id,
+                                name: item.name,
+                                product_name: item.product_name,
+                                price: item.price,
+                                product_price: item.product_price
+                            });
+                        });
+                    }
+                });
+
+            } catch (error) {
+                logDebug('Error in debugOrders:', error);
+            }
+        }
+
+        async function debugProducts() {
+            try {
+                logDebug('Fetching products from Supabase...');
+                const { data: products, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .order('name');
+
+                if (error) {
+                    logDebug('Error fetching products:', error);
+                    return;
+                }
+
+                logDebug(`Found ${products.length} products:`, products);
+
+                // Look for spinach and basmati rice specifically
+                const spinach = products.find(p => p.name.toLowerCase().includes('spinach'));
+                const basmati = products.find(p => p.name.toLowerCase().includes('basmati') || p.name.toLowerCase().includes('rice'));
+
+                if (spinach) {
+                    logDebug('Spinach product found:', spinach);
+                } else {
+                    logDebug('No spinach product found');
+                }
+
+                if (basmati) {
+                    logDebug('Basmati/Rice product found:', basmati);
+                } else {
+                    logDebug('No basmati/rice product found');
+                }
+
+            } catch (error) {
+                logDebug('Error in debugProducts:', error);
+            }
+        }
+
+        function debugCart() {
+            try {
+                logDebug('Checking localStorage cart...');
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                logDebug(`Cart has ${cart.length} items:`, cart);
+
+                // Check for product mismatches in cart
+                cart.forEach((item, index) => {
+                    logDebug(`Cart Item ${index}:`, {
+                        id: item.id,
+                        name: item.name,
+                        product_name: item.product_name,
+                        price: item.price,
+                        product_price: item.product_price,
+                        image: item.image,
+                        product_image: item.product_image
+                    });
+                });
+
+            } catch (error) {
+                logDebug('Error in debugCart:', error);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('debug-orders').addEventListener('click', debugOrders);
+        document.getElementById('debug-products').addEventListener('click', debugProducts);
+        document.getElementById('debug-cart').addEventListener('click', debugCart);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            logDebug('Debug tool loaded. Click buttons to investigate the product mismatch issue.');
+        });
+    </script>
+</body>
+</html>
+
+
