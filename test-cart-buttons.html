@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart Button Test</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        .log { background: #f0f0f0; padding: 10px; margin: 10px 0; font-family: monospace; font-size: 12px; max-height: 300px; overflow: auto; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Cart Button Debug Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Test Cart Button Rendering</h2>
+        <button onclick="testButtonRendering()">Test Button Rendering</button>
+        <div id="test-html"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Test Event Listeners</h2>
+        <button onclick="testEventListeners()">Test Event Listeners</button>
+        <div class="log" id="listener-log"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Simulated Cart</h2>
+        <div id="cart-container"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Log Output:</h2>
+        <div class="log" id="log-output"></div>
+    </div>
+    
+    <script>
+        const logs = [];
+        
+        function log(message, type = 'info') {
+            console.log(message);
+            logs.push(`[${type}] ${message}`);
+            updateLogDisplay();
+        }
+        
+        function updateLogDisplay() {
+            document.getElementById('log-output').innerHTML = logs.map(l => 
+                `<div class="${l.includes('ERROR') ? 'error' : l.includes('SUCCESS') ? 'success' : ''}">${l}</div>`
+            ).join('');
+            document.getElementById('log-output').scrollTop = document.getElementById('log-output').scrollHeight;
+        }
+        
+        function testButtonRendering() {
+            logs.length = 0;
+            log('Starting button rendering test...');
+            
+            const cart = [
+                { id: 'prod-1', name: 'Apple', quantity: 2, price: 50 },
+                { id: 'prod-2', name: 'Banana', quantity: 1, price: 30 }
+            ];
+            
+            log(`Cart has ${cart.length} items`);
+            
+            const html = `
+                <div style="border: 2px solid blue; padding: 10px;">
+                    ${cart.map(item => `
+                        <div style="margin: 10px; padding: 10px; border: 1px solid gray;">
+                            <strong>${item.name}</strong> - Qty: <span class="quantity-${item.id}">${item.quantity}</span> @ ₹${item.price}
+                            <br>
+                            <button class="quantity-btn" data-id="${item.id}" data-action="decrease">-</button>
+                            <span data-id="${item.id}" class="qty-display">${item.quantity}</span>
+                            <button class="quantity-btn" data-id="${item.id}" data-action="increase">+</button>
+                            <small>Id: ${item.id}, Action: increase/decrease</small>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            document.getElementById('test-html').innerHTML = html;
+            log('✅ Buttons rendered successfully');
+            
+            // Verify buttons exist
+            const buttons = document.querySelectorAll('.quantity-btn');
+            log(`Found ${buttons.length} quantity buttons`, buttons.length > 0 ? 'success' : 'error');
+            
+            buttons.forEach((btn, i) => {
+                log(`  Button ${i}: id="${btn.dataset.id}", action="${btn.dataset.action}"`);
+            });
+            
+            // Add listeners
+            attachTestListeners();
+        }
+        
+        function attachTestListeners() {
+            logs.length = 0;
+            log('Attaching event listeners...');
+            
+            const buttons = document.querySelectorAll('.quantity-btn');
+            log(`Found ${buttons.length} buttons to attach`);
+            
+            buttons.forEach((btn, idx) => {
+                log(`  Attaching to button ${idx}...`);
+                
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const id = this.dataset.id;
+                    const action = this.dataset.action;
+                    
+                    log(`🔴 BUTTON CLICKED! id="${id}", action="${action}"`, 'success');
+                    
+                    // Find and update qty display
+                    const display = document.querySelector(`[data-id="${id}"].qty-display`);
+                    if (display) {
+                        let currentQty = parseInt(display.textContent);
+                        if (action === 'increase') {
+                            currentQty += 1;
+                            log(`  ✅ Increased to ${currentQty}`, 'success');
+                        } else if (action === 'decrease' && currentQty > 1) {
+                            currentQty -= 1;
+                            log(`  ✅ Decreased to ${currentQty}`, 'success');
+                        }
+                        display.textContent = currentQty;
+                    } else {
+                        log(`  ❌ Could not find display element for id="${id}"`, 'error');
+                    }
+                });
+            });
+            
+            log('✅ All listeners attached', 'success');
+        }
+        
+        function testEventListeners() {
+            testButtonRendering();
+        }
+        
+        // Auto-run on load
+        window.addEventListener('load', () => {
+            log('Page loaded - ready to test');
+        });
+    </script>
+</body>
+</html>
