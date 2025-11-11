@@ -509,7 +509,6 @@
                                 ` : ''}
                                 ${order.delivery_agent_name ? `<p class="text-sm text-gray-600"><strong>Delivery Agent:</strong> ${order.delivery_agent_name}</p>` : ''}
                                 ${orderStatus === 'delivered' ? `<p class="text-green-600">Delivered on ${new Date(order.paid_at || order.paidAt || order.created_at || order.createdAt).toLocaleDateString('en-IN')}</p>` : ''}
-                                ${orderStatus === 'out_for_delivery' ? '<p class="text-indigo-600">Expected delivery: Today by 6:00 PM</p>' : ''}
                                 ${orderStatus === 'picked_up' ? '<p class="text-blue-600">Order picked up and ready for delivery</p>' : ''}
                             </div>
                                 <div class="orders-order-actions flex space-x-2">
